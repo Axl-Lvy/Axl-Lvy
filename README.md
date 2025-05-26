@@ -55,6 +55,6 @@ Bioinformatics, with studies at <b>École Polytechnique</b> and <b>Université P
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/axl-lvy/axl-lvy/output/snake-dark.svg" />
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/axl-lvy/axl-lvy/output/snake.svg" />
-    <img alt="github-snake" src="snake.svg" />
+    <img alt="github-snake" src="https://raw.githubusercontent.com/axl-lvy/axl-lvy/output/snake.svg" />
   </picture>
 </p>
