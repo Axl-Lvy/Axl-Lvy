@@ -14,7 +14,7 @@ Hi! I'm Axel, a passionate software developer working in R&D at <b>ActiveViam</b
 Bioinformatics, with studies at <b>École Polytechnique</b> and <b>Université Paris-Saclay</b>.
 
 - 🏎️ Specialized in performance optimization in Java.
-- ♟️ I love chess and am building <a href="https://github.com/Axl-Lvy/AnkiChess">AnkiChess</a>, an app to help
+- ♟️ I love chess and am building <a href="https://github.com/Axl-Lvy/AnkiChess">MemorChess</a>, an app to help
   memorize chess openings.
 - ⌨️ I use an <a href="https://github.com/Axl-Lvy/corne-qwerty-zmk">ergonomic keyboard</a> for comfort and
   productivity.
