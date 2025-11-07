@@ -9,6 +9,12 @@ const TechStack: React.FC = () => {
                     <span className="text-sm">Java</span>
                 </div>
 
+                {/* Atoti */}
+                <div className="flex flex-col items-center gap-2">
+                    <img src="/images/atoti.png" height="48" width="48" alt="Atoti" />
+                    <span className="text-sm">Atoti</span>
+                </div>
+
                 {/* Kotlin */}
                 <div className="flex flex-col items-center gap-2">
                     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" height="48" width="48" alt="Kotlin" />

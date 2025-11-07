@@ -32,6 +32,7 @@ Bioinformatics, with studies at <b>École Polytechnique</b> and <b>Université P
 
 <div align="center" style="display: flex; align-items: center; justify-content: space-between;">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" height="40" width="52" alt="java logo"  />
+  <img src="public/images/atoti.png" height="40" width="52" alt="atoti logo"  />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" height="40" width="52" alt="kotlin logo"  />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jetpackcompose/jetpackcompose-original.svg" height="40" width="52" alt="jetpackcompose logo"  />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" height="40" width="52" alt="python logo"  />
