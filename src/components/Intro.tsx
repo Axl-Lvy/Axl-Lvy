@@ -1,23 +1,19 @@
-"use client"
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FiCode, FiMapPin, FiBriefcase } from 'react-icons/fi';
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+import { FiCode, FiMapPin, FiBriefcase } from "react-icons/fi";
 
-import { introDetails } from '@/data/intro';
+import { introDetails } from "@/data/intro";
+import TarotMeterButton from "@/components/TarotMeterButton";
 
 const Intro: React.FC = () => {
     return (
-        <section
-            id="hero"
-            className="relative flex items-center justify-center pb-20 pt-32 md:pt-40 px-5 min-h-[80vh]"
-        >
+        <section id="hero" className="relative flex items-center justify-center pb-20 pt-32 md:pt-40 px-5 min-h-[80vh]">
             <div className="absolute left-0 top-0 bottom-0 -z-10 w-full">
-                <div className="absolute inset-0 h-full w-full bg-hero-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]">
-                </div>
+                <div className="absolute inset-0 h-full w-full bg-hero-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]"></div>
             </div>
 
-            <div className="absolute left-0 right-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background">
-            </div>
+            <div className="absolute left-0 right-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background"></div>
 
             <div className="text-center max-w-5xl w-full">
                 <motion.h1
@@ -68,6 +64,16 @@ const Intro: React.FC = () => {
                         <h3 className="font-semibold text-lg mb-2">Paris, France</h3>
                         <p className="text-sm text-gray-600">Based in Europe</p>
                     </div>
+                </motion.div>
+
+                {/* TarotMeter Button */}
+                <motion.div
+                    className="mt-10 flex justify-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                    <TarotMeterButton />
                 </motion.div>
             </div>
         </section>

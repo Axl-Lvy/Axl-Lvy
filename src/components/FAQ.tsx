@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { BiMinus, BiPlus } from "react-icons/bi";
 
@@ -14,10 +14,13 @@ const FAQ: React.FC = () => {
                     <SectionTitle>
                         <h2 className="my-3 !leading-snug lg:max-w-sm text-center lg:text-left">Frequently Asked Questions</h2>
                     </SectionTitle>
-                    <p className="lg:mt-10 text-foreground-accent text-center lg:text-left">
-                        Ask us anything!
-                    </p>
-                    <a href="mailto:" className="mt-3 block text-xl lg:text-4xl text-secondary font-semibold hover:underline text-center lg:text-left">help@finwise.com</a>
+                    <p className="lg:mt-10 text-foreground-accent text-center lg:text-left">Ask us anything!</p>
+                    <a
+                        href="mailto:"
+                        className="mt-3 block text-xl lg:text-4xl text-secondary font-semibold hover:underline text-center lg:text-left"
+                    >
+                        help@finwise.com
+                    </a>
                 </div>
 
                 <div className="w-full lg:max-w-2xl mx-auto border-b">
@@ -28,7 +31,11 @@ const FAQ: React.FC = () => {
                                     <>
                                         <DisclosureButton className="flex items-center justify-between w-full px-4 pt-7 text-lg text-left border-t">
                                             <span className="text-2xl font-semibold">{faq.question}</span>
-                                            {open ? <BiMinus className="w-5 h-5 text-secondary" /> : <BiPlus className="w-5 h-5 text-secondary" />}
+                                            {open ? (
+                                                <BiMinus className="w-5 h-5 text-secondary" />
+                                            ) : (
+                                                <BiPlus className="w-5 h-5 text-secondary" />
+                                            )}
                                         </DisclosureButton>
                                         <DisclosurePanel className="px-4 pt-4 pb-2 text-foreground-accent">
                                             {faq.answer}

@@ -6,7 +6,12 @@ interface Props {
     description: string;
 }
 
-const Section: React.FC<React.PropsWithChildren<Props>> = ({ id, title, description, children }: React.PropsWithChildren<Props>) => {
+const Section: React.FC<React.PropsWithChildren<Props>> = ({
+    id,
+    title,
+    description,
+    children,
+}: React.PropsWithChildren<Props>) => {
     return (
         <section id={id} className="py-10 lg:py-20">
             <SectionTitle>
@@ -15,7 +20,7 @@ const Section: React.FC<React.PropsWithChildren<Props>> = ({ id, title, descript
             <p className="mb-12 text-center">{description}</p>
             {children}
         </section>
-    )
-}
+    );
+};
 
-export default Section
+export default Section;

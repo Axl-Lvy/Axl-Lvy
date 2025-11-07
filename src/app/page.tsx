@@ -6,30 +6,21 @@ import Stats from "@/components/Stats";
 import CTA from "@/components/CTA";
 
 const HomePage: React.FC = () => {
-  return (
-    <>
-      <Intro />
-      <TechStack />
-      <Container>
-        <Section
-          id="features"
-          title="What I Do"
-          description="My expertise and current projects"
-        >
-        </Section>
+    return (
+        <>
+            <Intro />
+            <TechStack />
+            <Container>
+                <Section id="features" title="What I Do" description="My expertise and current projects"></Section>
 
-        <Stats />
-        
-        <Section
-          id="contact"
-          title=""
-          description=""
-        >
-          <CTA />
-        </Section>
-      </Container>
-    </>
-  );
+                <Stats />
+
+                <Section id="contact" title="" description="">
+                    <CTA />
+                </Section>
+            </Container>
+        </>
+    );
 };
 
 export default HomePage;

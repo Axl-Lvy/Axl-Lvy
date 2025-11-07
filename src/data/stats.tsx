@@ -8,16 +8,16 @@ export const stats: IStats[] = [
     {
         title: "ActiveViam",
         icon: <FiCode size={34} className="text-blue-500" />,
-        description: "Working in R&D at ActiveViam, Paris, building high-performance financial software solutions."
+        description: "Working in R&D at ActiveViam, Paris, building high-performance financial software solutions.",
     },
     {
         title: "Open Source",
         icon: <SiGithub size={34} className="text-gray-700" />,
-        description: "Building MemorChess and contributing to the developer community on GitHub."
+        description: "Building MemorChess and contributing to the developer community on GitHub.",
     },
     {
         title: "Ergonomic",
         icon: <BsKeyboardFill size={34} className="text-green-600" />,
-        description: "Using custom ergonomic keyboard setup for enhanced productivity and comfort."
-    }
+        description: "Using custom ergonomic keyboard setup for enhanced productivity and comfort.",
+    },
 ];

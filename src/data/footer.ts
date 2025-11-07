@@ -9,19 +9,19 @@ export const footerDetails: {
     quickLinks: [
         {
             text: "About",
-            url: "#features"
+            url: "#features",
         },
         {
             text: "Projects",
-            url: "#projects"
+            url: "#projects",
         },
         {
             text: "Contact",
-            url: "#contact"
-        }
+            url: "#contact",
+        },
     ],
     socials: {
-        github: 'https://github.com/Axl-Lvy',
-        linkedin: 'https://www.linkedin.com/in/axel-levy-212a0818b',
-    }
-}
+        github: "https://github.com/Axl-Lvy",
+        linkedin: "https://www.linkedin.com/in/axel-levy-212a0818b",
+    },
+};

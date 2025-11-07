@@ -3,14 +3,14 @@ import { IMenuItem } from "@/types";
 export const menuItems: IMenuItem[] = [
     {
         text: "About",
-        url: "#features"
+        url: "#features",
     },
     {
         text: "Projects",
-        url: "#projects"
+        url: "#projects",
     },
     {
         text: "Contact",
-        url: "#contact"
-    }
+        url: "#contact",
+    },
 ];

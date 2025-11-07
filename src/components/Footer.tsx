@@ -1,10 +1,10 @@
-import Link from 'next/link';
-import React from 'react';
-import { FaFingerprint } from 'react-icons/fa';
+import Link from "next/link";
+import React from "react";
+import { FaFingerprint } from "react-icons/fa";
 
-import { siteDetails } from '@/data/siteDetails';
-import { footerDetails } from '@/data/footer';
-import { getPlatformIconByName } from '@/utils';
+import { siteDetails } from "@/data/siteDetails";
+import { footerDetails } from "@/data/footer";
+import { getPlatformIconByName } from "@/utils";
 
 const Footer: React.FC = () => {
     return (
@@ -13,20 +13,18 @@ const Footer: React.FC = () => {
                 <div>
                     <Link href="/" className="flex items-center gap-2">
                         <FaFingerprint className="min-w-fit w-5 h-5 md:w-7 md:h-7" />
-                        <h3 className="manrope text-xl font-semibold cursor-pointer">
-                            {siteDetails.siteName}
-                        </h3>
+                        <h3 className="manrope text-xl font-semibold cursor-pointer">{siteDetails.siteName}</h3>
                     </Link>
-                    <p className="mt-3.5 text-foreground-accent">
-                        {footerDetails.subheading}
-                    </p>
+                    <p className="mt-3.5 text-foreground-accent">{footerDetails.subheading}</p>
                 </div>
                 <div>
                     <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
                     <ul className="text-foreground-accent">
-                        {footerDetails.quickLinks.map(link => (
+                        {footerDetails.quickLinks.map((link) => (
                             <li key={link.text} className="mb-2">
-                                <Link href={link.url} className="hover:text-foreground">{link.text}</Link>
+                                <Link href={link.url} className="hover:text-foreground">
+                                    {link.text}
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -36,7 +34,7 @@ const Footer: React.FC = () => {
 
                     {footerDetails.socials && (
                         <div className="mt-5 flex items-center gap-5 flex-wrap">
-                            {Object.keys(footerDetails.socials).map(platformName => {
+                            {Object.keys(footerDetails.socials).map((platformName) => {
                                 if (platformName && footerDetails.socials[platformName]) {
                                     return (
                                         <Link
@@ -46,7 +44,7 @@ const Footer: React.FC = () => {
                                         >
                                             {getPlatformIconByName(platformName)}
                                         </Link>
-                                    )
+                                    );
                                 }
                             })}
                         </div>
@@ -54,7 +52,9 @@ const Footer: React.FC = () => {
                 </div>
             </div>
             <div className="mt-8 md:text-center text-foreground-accent px-6">
-                <p>Copyright &copy; {new Date().getFullYear()} {siteDetails.siteName}. All rights reserved.</p>
+                <p>
+                    Copyright &copy; {new Date().getFullYear()} {siteDetails.siteName}. All rights reserved.
+                </p>
             </div>
         </footer>
     );

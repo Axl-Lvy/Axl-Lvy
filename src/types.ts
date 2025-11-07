@@ -7,7 +7,7 @@ export interface IBenefit {
     title: string;
     description: string;
     imageSrc: string;
-    bullets: IBenefitBullet[]
+    bullets: IBenefitBullet[];
 }
 
 export interface IBenefitBullet {
