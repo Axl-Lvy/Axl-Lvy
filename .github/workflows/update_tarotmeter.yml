@@ -15,17 +15,29 @@ jobs:
           rm -rf public/tarotmeter/*
           echo "Cleaned public/tarotmeter folder"
 
-      - name: Download artifact
+      - name: Download and extract artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          ARTIFACT_URL="${{ github.event.client_payload.message }}"
-          echo "Downloading artifact from: $ARTIFACT_URL"
-          curl -L -o artifact.zip "$ARTIFACT_URL"
+          RUN_URL="${{ github.event.client_payload.message }}"
+          echo "Processing run URL: $RUN_URL"
 
-      - name: Extract artifact to public/tarotmeter
-        run: |
-          unzip -o artifact.zip -d public/tarotmeter
-          rm artifact.zip
-          echo "Extracted artifact to public/tarotmeter"
+          # Extract owner, repo, and run_id from URL
+          if [[ $RUN_URL =~ github\.com/([^/]+)/([^/]+)/actions/runs/([0-9]+) ]]; then
+            OWNER="${BASH_REMATCH[1]}"
+            REPO="${BASH_REMATCH[2]}"
+            RUN_ID="${BASH_REMATCH[3]}"
+
+            echo "Owner: $OWNER, Repo: $REPO, Run ID: $RUN_ID"
+
+            # Download artifact using GitHub CLI
+            gh run download $RUN_ID --repo "$OWNER/$REPO" --name tarotmeter-wasm --dir public/tarotmeter
+
+            echo "Downloaded and extracted artifact to public/tarotmeter"
+          else
+            echo "Error: Invalid GitHub Actions run URL format"
+            exit 1
+          fi
 
       - name: Commit and push changes
         run: |
