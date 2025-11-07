@@ -1,7 +1,6 @@
 import { ctaDetails } from "@/data/cta";
 import LinkedInButton from "@/components/LinkedInButton";
 import GitHubButton from "@/components/GitHubButton";
-import TarotMeterButton from "@/components/TarotMeterButton";
 
 const CTA: React.FC = () => {
     return (
