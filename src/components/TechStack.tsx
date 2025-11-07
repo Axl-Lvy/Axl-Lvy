@@ -2,7 +2,7 @@ const TechStack: React.FC = () => {
     return (
         <section id="tech-stack" className="py-16 px-5 bg-background">
             <p className="text-lg font-medium text-center mb-8">Technologies I Work With</p>
-            <div className="mt-5 w-full flex flex-wrap flex-row items-center justify-center gap-8 sm:gap-12 opacity-70">
+            <div className="mt-5 w-full flex flex-wrap flex-row items-center justify-center gap-8 sm:gap-12">
                 {/* Java */}
                 <div className="flex flex-col items-center gap-2">
                     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" height="48" width="48" alt="Java" />
