@@ -1,22 +1,23 @@
-import { BsBarChartFill, BsFillStarFill } from "react-icons/bs";
-import { PiGlobeFill } from "react-icons/pi";
+import { FiCode } from "react-icons/fi";
+import { SiGithub } from "react-icons/si";
+import { BsKeyboardFill } from "react-icons/bs";
 
 import { IStats } from "@/types";
 
 export const stats: IStats[] = [
     {
-        title: "20M+",
-        icon: <BsBarChartFill size={34} className="text-blue-500" />,
-        description: "Transactions processed securely every day, providing real-time insights."
+        title: "ActiveViam",
+        icon: <FiCode size={34} className="text-blue-500" />,
+        description: "Working in R&D at ActiveViam, Paris, building high-performance financial software solutions."
     },
     {
-        title: "5.0",
-        icon: <BsFillStarFill size={34} className="text-yellow-500" />,
-        description: "Star rating, consistently maintained across app stores."
+        title: "Open Source",
+        icon: <SiGithub size={34} className="text-gray-700" />,
+        description: "Building MemorChess and contributing to the developer community on GitHub."
     },
     {
-        title: "200+ ",
-        icon: <PiGlobeFill size={34} className="text-green-600" />,
-        description: "Financial Institutions, seamlessly integrated, so you can manage all accounts."
+        title: "Ergonomic",
+        icon: <BsKeyboardFill size={34} className="text-green-600" />,
+        description: "Using custom ergonomic keyboard setup for enhanced productivity and comfort."
     }
 ];

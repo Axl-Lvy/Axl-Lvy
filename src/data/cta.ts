@@ -1,6 +1,6 @@
 export const ctaDetails = {
-    heading: 'Join Over 1 Million Users To Transform Your Finances',
-    subheading: 'Your journey to financial freedom starts here. Download Finwise today and take the first step towards a brighter financial future!',
-    appStoreUrl: '#',
-    googlePlayUrl: '#'
+    heading: 'Let\'s Connect and Build Something Great',
+    subheading: 'Interested in collaborating on a project, discussing performance optimization, or just want to chat about chess? Feel free to reach out!',
+    appStoreUrl: 'https://www.linkedin.com/in/axel-levy-212a0818b',
+    googlePlayUrl: 'https://github.com/Axl-Lvy'
 }
