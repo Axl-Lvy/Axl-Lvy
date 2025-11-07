@@ -1,0 +1,40 @@
+name: Update Tarot Meter from Artifact
+on:
+  repository_dispatch:
+    types: [update-tarotmeter]
+
+jobs:
+  update-tarotmeter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Clean tarotmeter folder
+        run: |
+          rm -rf public/tarotmeter/*
+          echo "Cleaned public/tarotmeter folder"
+
+      - name: Download artifact
+        run: |
+          ARTIFACT_URL="${{ github.event.client_payload.message }}"
+          echo "Downloading artifact from: $ARTIFACT_URL"
+          curl -L -o artifact.zip "$ARTIFACT_URL"
+
+      - name: Extract artifact to public/tarotmeter
+        run: |
+          unzip -o artifact.zip -d public/tarotmeter
+          rm artifact.zip
+          echo "Extracted artifact to public/tarotmeter"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/tarotmeter/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update TarotMeter files from artifact"
+            git push
+          fi
