@@ -3,6 +3,9 @@ on:
   repository_dispatch:
     types: [update-tarotmeter]
 
+permissions:
+  contents: write
+
 jobs:
   update-tarotmeter:
     runs-on: ubuntu-latest
