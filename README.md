@@ -24,7 +24,7 @@ Bioinformatics, with studies at <b>École Polytechnique</b> and <b>Université P
 <a href="https://www.activeviam.com/">
 
 <p align="center">
-<img src="dist/ActiveViam.jpg" alt="ActiveViam Logo" align="center"/>
+<img src="public/images/ActiveViam.jpg" alt="ActiveViam Logo" align="center"/>
 </p>
 </a>
 
