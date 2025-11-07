@@ -42,6 +42,10 @@ jobs:
             exit 1
           fi
 
+      - name: Fix resource paths in index.html
+        run: |
+          python3 scripts/fix_tarotmeter_paths.py
+
       - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
