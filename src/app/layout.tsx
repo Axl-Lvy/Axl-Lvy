@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import { Source_Sans_3, Manrope } from "next/font/google";
 
 import Header from "@/components/Header";
