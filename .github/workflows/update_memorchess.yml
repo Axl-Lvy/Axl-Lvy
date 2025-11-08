@@ -1,0 +1,59 @@
+name: Update Tarot Meter from Artifact
+on:
+  repository_dispatch:
+    types: [update-memorchess]
+
+permissions:
+  contents: write
+
+jobs:
+  update-memorchess:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Clean memorchess folder
+        run: |
+          rm -rf public/memorchess/*
+          echo "Cleaned public/memorchess folder"
+
+      - name: Download and extract artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RUN_URL="${{ github.event.client_payload.message }}"
+          echo "Processing run URL: $RUN_URL"
+
+          # Extract owner, repo, and run_id from URL
+          if [[ $RUN_URL =~ github\.com/([^/]+)/([^/]+)/actions/runs/([0-9]+) ]]; then
+            OWNER="${BASH_REMATCH[1]}"
+            REPO="${BASH_REMATCH[2]}"
+            RUN_ID="${BASH_REMATCH[3]}"
+
+            echo "Owner: $OWNER, Repo: $REPO, Run ID: $RUN_ID"
+
+            # Download artifact using GitHub CLI
+            gh run download $RUN_ID --repo "$OWNER/$REPO" --name memorchess-wasm --dir public/memorchess
+
+            echo "Downloaded and extracted artifact to public/memorchess"
+          else
+            echo "Error: Invalid GitHub Actions run URL format"
+            exit 1
+          fi
+
+      - name: Fix resource paths in index.html
+        run: |
+          python3 scripts/fix_memorchess_paths.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/memorchess/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update MemorChess files from artifact"
+            git push
+          fi

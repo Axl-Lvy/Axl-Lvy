@@ -15,6 +15,19 @@ const nextConfig = {
                     },
                 ],
             },
+            {
+                source: "/memorchess/:path*",
+                headers: [
+                    {
+                        key: "Cross-Origin-Opener-Policy",
+                        value: "same-origin",
+                    },
+                    {
+                        key: "Cross-Origin-Embedder-Policy",
+                        value: "require-corp",
+                    },
+                ],
+            },
         ];
     },
     async rewrites() {
@@ -26,6 +39,14 @@ const nextConfig = {
             {
                 source: "/tarotmeter/",
                 destination: "/tarotmeter/index.html",
+            },
+            {
+                source: "/memorchess",
+                destination: "/memorchess/index.html",
+            },
+            {
+                source: "/memorchess/",
+                destination: "/memorchess/index.html",
             },
         ];
     },
