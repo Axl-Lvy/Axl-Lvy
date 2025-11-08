@@ -86,6 +86,35 @@ def add_url_cleanup_script(html_content: str) -> str:
     return result
 
 
+def add_base_tag(html_content: str) -> str:
+    """
+    Add a base tag to handle dynamically loaded resources (like composeResources).
+
+    Args:
+        html_content: The HTML content
+
+    Returns:
+        The modified HTML content with the base tag
+    """
+    # Check if base tag already exists
+    if '<base' in html_content:
+        # Base tag already exists, don't duplicate
+        return html_content
+
+    # Find the <head> tag and insert base tag right after it
+    base_tag = '<base href="/tarotmeter/">'
+
+    # Insert after <head> and before any other tags
+    # Find position after opening <head> tag
+    head_match = re.search(r'<head[^>]*>\s*', html_content)
+    if head_match:
+        insert_pos = head_match.end()
+        result = html_content[:insert_pos] + '\n  ' + base_tag + html_content[insert_pos:]
+        return result
+
+    return html_content
+
+
 def process_index_html(file_path: Path) -> bool:
     """
     Process the index.html file to fix resource paths.
@@ -103,6 +132,9 @@ def process_index_html(file_path: Path) -> bool:
         original_content = content
 
         # Apply fixes
+        print("Adding base tag for dynamic resources...")
+        content = add_base_tag(content)
+
         print("Fixing resource paths...")
         content = fix_resource_paths(content)
 
