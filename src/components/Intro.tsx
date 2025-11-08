@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 import { FiCode, FiMapPin, FiBriefcase } from "react-icons/fi";
 
 import { introDetails } from "@/data/intro";
-import TarotMeterButton from "@/components/TarotMeterButton";
-import MemorchessButton from "@/components/MemorchessButton";
 
 const Intro: React.FC = () => {
     return (
@@ -65,17 +63,6 @@ const Intro: React.FC = () => {
                         <h3 className="font-semibold text-lg mb-2">Paris, France</h3>
                         <p className="text-sm text-gray-600">Based in Europe</p>
                     </div>
-                </motion.div>
-
-                {/* TarotMeter Button */}
-                <motion.div
-                    className="mt-10 flex justify-center gap-4 flex-wrap"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                >
-                    <TarotMeterButton />
-                    <MemorchessButton />
                 </motion.div>
             </div>
         </section>
