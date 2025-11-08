@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+  <base href="/memorchess/"><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemorChess</title>
+    <link type="text/css" rel="stylesheet" href="/memorchess/styles.css">
+    <script type="application/javascript" src="/memorchess/composeApp.js"></script>
+  <script>
+    // Remove index.html from URL if present
+    if (window.location.pathname.includes('index.html')) {
+      const newPath = window.location.pathname.replace(/\/index\.html/, '');
+      const newUrl = newPath + window.location.hash;
+      window.history.replaceState({}, '', newUrl);
+    }
+  </script>
+
+</head>
+<body>
+</body>
+</html>
