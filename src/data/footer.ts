@@ -12,10 +12,6 @@ export const footerDetails: {
             url: "#features",
         },
         {
-            text: "Projects",
-            url: "#projects",
-        },
-        {
             text: "Contact",
             url: "#contact",
         },
