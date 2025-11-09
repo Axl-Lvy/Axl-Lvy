@@ -1,0 +1,43 @@
+{
+    "intro": {
+        "heading": "Hi! I'm Axel, a Software Developer",
+        "subheading": "Passionate about performance optimization in Java, working in R&D at ActiveViam in Paris. Building innovative solutions and exploring the intersection of technology and chess."
+    },
+    "menu": {
+        "about": "About",
+        "contact": "Contact"
+    },
+    "features": {
+        "title": "What I Do",
+        "description": "My expertise and current projects"
+    },
+    "stats": {
+        "activeviam": {
+            "title": "ActiveViam",
+            "description": "Working in R&D at ActiveViam, Paris, building high-performance financial software solutions."
+        },
+        "opensource": {
+            "title": "Open Source",
+            "description": "Building MemorChess and contributing to the developer community on GitHub."
+        },
+        "ergonomic": {
+            "title": "Ergonomic",
+            "description": "Using custom ergonomic keyboard setup for enhanced productivity and comfort."
+        }
+    },
+    "cta": {
+        "heading": "Let's Connect and Build Something Great",
+        "subheading": "Interested in collaborating on a project, discussing performance optimization, or just want to chat about chess? Feel free to reach out!"
+    },
+    "buttons": {
+        "tarotmeter": "Try TarotMeter",
+        "memorchess": "Play MemorChess",
+        "linkedin": "Connect on LinkedIn",
+        "github": "View on GitHub"
+    },
+    "footer": {
+        "subheading": "Software Developer specializing in Java performance optimization at ActiveViam, Paris.",
+        "about": "About",
+        "contact": "Contact"
+    }
+}

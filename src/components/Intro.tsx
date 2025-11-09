@@ -2,10 +2,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FiCode, FiMapPin, FiBriefcase } from "react-icons/fi";
-
-import { introDetails } from "@/data/intro";
+import { useTranslations } from "next-intl";
 
 const Intro: React.FC = () => {
+    const t = useTranslations("intro");
     return (
         <section id="hero" className="relative flex items-center justify-center pb-20 pt-32 md:pt-40 px-5 min-h-[80vh]">
             <div className="absolute left-0 top-0 bottom-0 -z-10 w-full">
@@ -21,7 +21,7 @@ const Intro: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    {introDetails.heading}
+                    {t("heading")}
                 </motion.h1>
 
                 <motion.p
@@ -30,7 +30,7 @@ const Intro: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                    {introDetails.subheading}
+                    {t("subheading")}
                 </motion.p>
 
                 {/* Animated Info Cards */}

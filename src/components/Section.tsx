@@ -2,8 +2,8 @@ import SectionTitle from "./SectionTitle";
 
 interface Props {
     id: string;
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
 }
 
 const Section: React.FC<React.PropsWithChildren<Props>> = ({
@@ -14,10 +14,12 @@ const Section: React.FC<React.PropsWithChildren<Props>> = ({
 }: React.PropsWithChildren<Props>) => {
     return (
         <section id={id} className="py-10 lg:py-20">
-            <SectionTitle>
-                <h2 className="text-center mb-4">{title}</h2>
-            </SectionTitle>
-            <p className="mb-12 text-center">{description}</p>
+            {title && (
+                <SectionTitle>
+                    <h2 className="text-center mb-4">{title}</h2>
+                </SectionTitle>
+            )}
+            {description && <p className="mb-12 text-center">{description}</p>}
             {children}
         </section>
     );

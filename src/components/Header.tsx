@@ -5,13 +5,15 @@ import React, { useState } from "react";
 import { Transition } from "@headlessui/react";
 import { HiOutlineXMark, HiBars3 } from "react-icons/hi2";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import Container from "./Container";
 import { siteDetails } from "@/data/siteDetails";
-import { menuItems } from "@/data/menuItems";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const t = useTranslations("menu");
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -30,18 +32,27 @@ const Header: React.FC = () => {
                     </Link>
 
                     {/* Desktop Menu */}
-                    <ul className="hidden md:flex space-x-6">
-                        {menuItems.map((item) => (
-                            <li key={item.text}>
+                    <div className="hidden md:flex items-center gap-6">
+                        <ul className="flex space-x-6">
+                            <li>
                                 <Link
-                                    href={item.url}
+                                    href="#features"
                                     className="text-foreground hover:text-foreground-accent transition-colors"
                                 >
-                                    {item.text}
+                                    {t("about")}
                                 </Link>
                             </li>
-                        ))}
-                    </ul>
+                            <li>
+                                <Link
+                                    href="#contact"
+                                    className="text-foreground hover:text-foreground-accent transition-colors"
+                                >
+                                    {t("contact")}
+                                </Link>
+                            </li>
+                        </ul>
+                        <LanguageSwitcher />
+                    </div>
 
                     {/* Mobile Menu Button */}
                     <div className="md:hidden flex items-center">
@@ -75,13 +86,19 @@ const Header: React.FC = () => {
             >
                 <div id="mobile-menu" className="md:hidden bg-white shadow-lg">
                     <ul className="flex flex-col space-y-4 pt-1 pb-6 px-6">
-                        {menuItems.map((item) => (
-                            <li key={item.text}>
-                                <Link href={item.url} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
-                                    {item.text}
-                                </Link>
-                            </li>
-                        ))}
+                        <li>
+                            <Link href="#features" className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                                {t("about")}
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="#contact" className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                                {t("contact")}
+                            </Link>
+                        </li>
+                        <li className="pt-2">
+                            <LanguageSwitcher />
+                        </li>
                     </ul>
                 </div>
             </Transition>

@@ -1,0 +1,43 @@
+{
+    "intro": {
+        "heading": "Salut ! Je suis Axel, Développeur Logiciel",
+        "subheading": "Passionné par l'optimisation des performances en Java, travaillant en R&D chez ActiveViam à Paris. Je développe des solutions innovantes et j'explore l'intersection entre la technologie et les échecs."
+    },
+    "menu": {
+        "about": "À propos",
+        "contact": "Contact"
+    },
+    "features": {
+        "title": "Ce que je fais",
+        "description": "Mon expertise et mes projets actuels"
+    },
+    "stats": {
+        "activeviam": {
+            "title": "ActiveViam",
+            "description": "Travaillant en R&D chez ActiveViam, Paris, développant des solutions logicielles financières haute performance."
+        },
+        "opensource": {
+            "title": "Open Source",
+            "description": "Développement de MemorChess et contribution à la communauté de développeurs sur GitHub."
+        },
+        "ergonomic": {
+            "title": "Ergonomique",
+            "description": "Utilisation d'un clavier ergonomique personnalisé pour une productivité et un confort améliorés."
+        }
+    },
+    "cta": {
+        "heading": "Connectons-nous et Construisons Quelque Chose de Génial",
+        "subheading": "Intéressé par une collaboration sur un projet, discuter d'optimisation des performances, ou simplement parler d'échecs ? N'hésitez pas à me contacter !"
+    },
+    "buttons": {
+        "tarotmeter": "Essayer TarotMeter",
+        "memorchess": "Jouer à MemorChess",
+        "linkedin": "Me connecter sur LinkedIn",
+        "github": "Voir sur GitHub"
+    },
+    "footer": {
+        "subheading": "Développeur logiciel spécialisé dans l'optimisation des performances Java chez ActiveViam, Paris.",
+        "about": "À propos",
+        "contact": "Contact"
+    }
+}
