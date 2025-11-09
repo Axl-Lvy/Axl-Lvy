@@ -28,7 +28,7 @@ export default function LanguageSwitcher() {
                     className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                         locale === loc ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     }`}
-                    aria-label={`Switch to ${loc === "en" ? "English" : "French"}`}
+                    aria-label={`Switch to ${loc === "fr" ? "French" : "English"}`}
                 >
                     {loc.toUpperCase()}
                 </button>
