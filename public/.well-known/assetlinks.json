@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "proj.tarotmeter.axl",
+      "sha256_cert_fingerprints": [
+        "A4:11:B7:64:52:BF:4C:DC:F1:1E:F8:DF:D9:E7:AF:6E:18:6E:FE:84:AC:89:48:F4:78:ED:97:BA:2F:12:3F:4C"
+      ]
+    }
+  }
+]

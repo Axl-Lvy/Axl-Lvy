@@ -11,7 +11,7 @@ export default function ConfirmEmailPage({ searchParams }: { searchParams: { app
 
     // If we have a valid app and token, redirect to the app's confirm-email page
     if (isValidApp && token) {
-        redirect(`/${app}#confirm-email/${encodeURIComponent(token)}`);
+        redirect(`/${app}#confirm-email/${token}`);
     }
 
     // If we reach here, something went wrong - this shouldn't happen
