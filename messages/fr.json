@@ -39,5 +39,11 @@
         "subheading": "Développeur logiciel spécialisé dans l'optimisation des performances Java chez ActiveViam, Paris.",
         "about": "À propos",
         "contact": "Contact"
+    },
+    "confirmEmail": {
+        "heading": "Email Confirmé",
+        "message": "Votre adresse email a été confirmée avec succès. Merci !",
+        "backHome": "Retour à l'accueil",
+        "returnToApp": "Retourner à l'application"
     }
 }

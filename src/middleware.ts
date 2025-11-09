@@ -34,5 +34,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/", "/(fr|en)/:path*", "/tarotmeter/:path*", "/memorchess/:path*"],
+    matcher: [
+        "/",
+        "/(fr|en)/:path*",
+        "/tarotmeter/:path*",
+        "/memorchess/:path*",
+        "/((?!_next|api|tarotmeter|memorchess|images).*)",
+    ],
 };

@@ -39,5 +39,11 @@
         "subheading": "Software Developer specializing in Java performance optimization at ActiveViam, Paris.",
         "about": "About",
         "contact": "Contact"
+    },
+    "confirmEmail": {
+        "heading": "Email Confirmed",
+        "message": "Your email address has been successfully confirmed. Thank you!",
+        "backHome": "Back to Home",
+        "returnToApp": "Return to App"
     }
 }
