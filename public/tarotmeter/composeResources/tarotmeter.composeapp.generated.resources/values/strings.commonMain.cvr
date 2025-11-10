@@ -31,6 +31,9 @@ string|general_save|U2F2ZQ==
 string|general_yes|WWVz
 string|history_empty_state|Tm8gZ2FtZXMgeWV0LiBTdGFydCBhIE5ldyBHYW1lLg==
 string|history_game_label|R2FtZQ==
+string|history_rename_game_label|R2FtZSBOYW1l
+string|history_rename_game_placeholder|RW50ZXIgbmV3IGdhbWUgbmFtZQ==
+string|history_rename_game|UmVuYW1lIEdhbWU=
 string|home_button_history|R2FtZSBIaXN0b3J5
 string|home_button_new_game|TmV3IEdhbWU=
 string|home_button_players|UGxheWVycw==
@@ -39,6 +42,8 @@ string|home_footer_text|Tm8gYWRzLiBPcGVuIHNvdXJjZS4gV2lsbCByZW1haW4gYXMgc3VjaC4=
 string|home_subtitle|VHJhY2sgeW91ciBUYXJvdCBnYW1lcyB3aXRoIGVsZWdhbmNl
 string|new_game_button_start|U3RhcnQgR2FtZQ==
 string|new_game_header|Q3JlYXRlIE5ldyBHYW1l
+string|new_game_name_label|R2FtZSBOYW1l
+string|new_game_name_placeholder|RW50ZXIgYSBuYW1lIGZvciB0aGlzIGdhbWU=
 string|new_game_no_players|Tm8gcGxheWVycyBhdmFpbGFibGUuIFBsZWFzZSBhZGQgcGxheWVycyBmaXJzdC4=
 string|new_game_select_players|U2VsZWN0IFBsYXllcnM=
 string|players_add_new|QWRkIE5ldyBQbGF5ZXI=
@@ -50,6 +55,10 @@ string|round_editor_add_new|QWRkIE5ldyBSb3VuZA==
 string|round_editor_edit|RWRpdCBSb3VuZA==
 string|settings_about_description|VGFyb3QgTWV0ZXIgaXMgYSBjb21wcmVoZW5zaXZlIHNjb3JlIHRyYWNraW5nIGFwcGxpY2F0aW9uIGZvciBGcmVuY2ggVGFyb3QgZ2FtZXMuCiAg
 string|settings_about|QWJvdXQ=
+string|settings_account_download_data_description|U3luYyB5b3VyIGRhdGEgZnJvbSB0aGUgY2xvdWQ=
+string|settings_account_download_data|RG93bmxvYWQgQ2xvdWQgRGF0YQ==
+string|settings_account_download_failed|RG93bmxvYWQgZmFpbGVk
+string|settings_account_download_success|RGF0YSBkb3dubG9hZGVkIHN1Y2Nlc3NmdWxseQ==
 string|settings_account_email|RW1haWw=
 string|settings_account_invalid_credentials|SW52YWxpZCBlbWFpbCBvciBwYXNzd29yZA==
 string|settings_account_logged_in|TG9nZ2VkIGlu
