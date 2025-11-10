@@ -1,18 +1,19 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect } from "react";
 import Container from "@/components/Container";
 
 export default function ConfirmEmailPage({ searchParams }: { searchParams: { app?: string; token?: string } }) {
     const app = searchParams.app;
     const token = searchParams.token;
-
-    // Use a Set for O(1) lookup
     const validApps = new Set(["tarotmeter", "memorchess"]);
     const isValidApp = app && validApps.has(app);
 
-    // If we have a valid app and token, redirect to the app's confirm-email page
-    if (isValidApp && token) {
-        redirect(`/${app}#confirm-email/${token}`);
-    }
+    useEffect(() => {
+        if (isValidApp && token) {
+            window.location.href = `/${app}#confirm-email/${token}`;
+        }
+    }, [isValidApp, token, app]);
 
     // If we reach here, something went wrong - this shouldn't happen
     return (
