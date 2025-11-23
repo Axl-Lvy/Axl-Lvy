@@ -8,59 +8,38 @@ export default function BrowserBrowserPage() {
     const [isConnected, setIsConnected] = useState(false);
     const [playCount, setPlayCount] = useState(0);
     const [lastPlayed, setLastPlayed] = useState<string>("Never");
-    const audioContextRef = useRef<AudioContext | null>(null);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // Initialize audio context
+    // Initialize audio element
     useEffect(() => {
-        // Create audio context on user interaction (required by browsers)
-        const initAudio = () => {
-            if (!audioContextRef.current) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-            }
-        };
-
-        document.addEventListener("click", initAudio, { once: true });
+        // Create audio element - put your MP3 file in the public folder
+        // For example: public/sounds/pipipi.mp3
+        audioRef.current = new Audio("/sounds/pipipi.mp3");
+        audioRef.current.volume = 0.5; // Adjust volume (0.0 to 1.0)
 
         return () => {
-            document.removeEventListener("click", initAudio);
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
         };
     }, []);
 
-    // Play "pipipi" sound using Web Audio API
+    // Play the MP3 file
     const playPipipi = () => {
-        if (!audioContextRef.current) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        if (audioRef.current) {
+            // Reset to beginning if already playing
+            audioRef.current.currentTime = 0;
+            // Play the audio
+            audioRef.current.play().catch((error) => {
+                // eslint-disable-next-line no-console
+                console.error("Error playing audio:", error);
+            });
+
+            setPlayCount((prev: number) => prev + 1);
+            setLastPlayed(new Date().toLocaleTimeString());
         }
-
-        const ctx = audioContextRef.current;
-        const notes = [523.25, 587.33, 659.25]; // C5, D5, E5 frequencies
-        const duration = 0.15; // Duration of each note in seconds
-
-        notes.forEach((freq, index) => {
-            const oscillator = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(ctx.destination);
-
-            oscillator.frequency.value = freq;
-            oscillator.type = "sine";
-
-            const startTime = ctx.currentTime + index * duration;
-            const endTime = startTime + duration;
-
-            gainNode.gain.setValueAtTime(0.3, startTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, endTime);
-
-            oscillator.start(startTime);
-            oscillator.stop(endTime);
-        });
-
-        setPlayCount((prev: number) => prev + 1);
-        setLastPlayed(new Date().toLocaleTimeString());
     };
 
     // Poll for music trigger
