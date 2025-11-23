@@ -62,7 +62,7 @@ export default function BoomBoomPage() {
                         {isPlaying ? "🎵 Playing..." : "▶️ Play Pipipi"}
                     </button>
                     <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
-                        Click the button to play music on all browsers viewing the /browserbrowser page!
+                        Click the button to play music on all browsers viewing the /listen page!
                     </p>
 
                     {/* Success feedback */}

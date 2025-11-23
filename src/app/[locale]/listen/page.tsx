@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Container from "@/components/Container";
 import Section from "@/components/Section";
 
-export default function BrowserBrowserPage() {
+export default function ListenPage() {
     const [isConnected, setIsConnected] = useState(false);
     const [playCount, setPlayCount] = useState(0);
     const [lastPlayed, setLastPlayed] = useState<string>("Never");
@@ -226,7 +226,7 @@ export default function BrowserBrowserPage() {
 
     return (
         <Container>
-            <Section id="browserbrowser">
+            <Section id="listen">
                 <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
                     <h1 className="text-4xl md:text-6xl font-bold text-center">Browser Browser 🎧</h1>
 
