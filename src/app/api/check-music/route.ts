@@ -3,6 +3,7 @@ import { getMusicState } from "../musicState";
 
 // Mark this route as dynamic
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
     try {
@@ -13,11 +14,23 @@ export async function GET(request: NextRequest) {
         // Check if there's a new event
         const shouldPlay = state.eventId > lastEventId;
 
-        return NextResponse.json({
+        // eslint-disable-next-line no-console
+        console.log(
+            `[check-music] Client lastEventId: ${lastEventId}, Server eventId: ${state.eventId}, shouldPlay: ${shouldPlay}`,
+        );
+
+        const response = NextResponse.json({
             shouldPlay,
             eventId: state.eventId,
             timestamp: state.lastTriggerTime,
         });
+
+        // Prevent caching
+        response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+        response.headers.set("Pragma", "no-cache");
+        response.headers.set("Expires", "0");
+
+        return response;
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Error checking music:", error);

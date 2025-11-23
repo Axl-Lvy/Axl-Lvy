@@ -10,9 +10,11 @@ export default function BrowserBrowserPage() {
     const [lastPlayed, setLastPlayed] = useState<string>("Never");
     const [isAudioReady, setIsAudioReady] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [lastCheckTime, setLastCheckTime] = useState<string>("");
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const lastEventIdRef = useRef<number>(0);
+    const lastTimestampRef = useRef<number>(0);
 
     // Initialize audio element
     useEffect(() => {
@@ -151,11 +153,22 @@ export default function BrowserBrowserPage() {
                 // eslint-disable-next-line no-console
                 console.log("Check music response:", data);
 
-                if (data.shouldPlay && data.eventId > lastEventIdRef.current) {
+                setLastCheckTime(new Date().toLocaleTimeString());
+
+                // Check both event ID and timestamp for reliability in serverless
+                const isNewEvent = data.eventId > lastEventIdRef.current;
+                const isNewTimestamp = data.timestamp > lastTimestampRef.current && data.timestamp > 0;
+
+                if ((isNewEvent || isNewTimestamp) && data.timestamp > 0) {
                     // eslint-disable-next-line no-console
-                    console.log(`New event detected! ID: ${data.eventId}`);
+                    console.log(`New event detected! ID: ${data.eventId}, Timestamp: ${data.timestamp}`);
                     lastEventIdRef.current = data.eventId;
+                    lastTimestampRef.current = data.timestamp;
                     await playPipipi();
+                } else if (data.timestamp > 0 && lastTimestampRef.current === 0) {
+                    // Initialize timestamp ref on first valid response
+                    lastTimestampRef.current = data.timestamp;
+                    lastEventIdRef.current = data.eventId;
                 }
 
                 setIsConnected(true);
@@ -210,9 +223,8 @@ export default function BrowserBrowserPage() {
                                 Connection: {isConnected ? "✓ Connected" : "✗ Disconnected"}
                             </p>
                             <p className="text-gray-600 dark:text-gray-400">Event ID: {lastEventIdRef.current}</p>
+                            <p className="text-gray-500 dark:text-gray-500 text-xs">Last check: {lastCheckTime || "Never"}</p>
                         </div>
-
-                        {/* Error Message */}
                         {errorMessage && (
                             <div className="mt-4 p-3 bg-red-100 dark:bg-red-900 rounded text-red-700 dark:text-red-300 text-sm">
                                 {errorMessage}
