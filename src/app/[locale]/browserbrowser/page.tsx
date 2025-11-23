@@ -97,7 +97,7 @@ export default function BrowserBrowserPage() {
 
     return (
         <Container>
-            <Section>
+            <Section id="browserbrowser">
                 <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
                     <h1 className="text-4xl md:text-6xl font-bold text-center">Browser Browser 🎧</h1>
 
