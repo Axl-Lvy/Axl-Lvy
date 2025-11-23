@@ -202,10 +202,14 @@ export default function BrowserBrowserPage() {
                         </p>
 
                         {/* Audio Status */}
-                        <div className="mt-4 text-sm">
+                        <div className="mt-4 text-sm space-y-1">
                             <p className={`${isAudioReady ? "text-green-600" : "text-yellow-600"}`}>
                                 Audio: {isAudioReady ? "✓ Ready" : "⏳ Loading..."}
                             </p>
+                            <p className={`${isConnected ? "text-green-600" : "text-red-600"}`}>
+                                Connection: {isConnected ? "✓ Connected" : "✗ Disconnected"}
+                            </p>
+                            <p className="text-gray-600 dark:text-gray-400">Event ID: {lastEventIdRef.current}</p>
                         </div>
 
                         {/* Error Message */}
