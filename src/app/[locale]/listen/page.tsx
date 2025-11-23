@@ -228,7 +228,7 @@ export default function ListenPage() {
         <Container>
             <Section id="listen">
                 <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
-                    <h1 className="text-4xl md:text-6xl font-bold text-center">Browser Browser 🎧</h1>
+                    <h1 className="text-4xl md:text-6xl font-bold text-center">Are you sure ? 🎧</h1>
 
                     <div className="flex items-center gap-2">
                         <div
