@@ -11,6 +11,7 @@ export default function BrowserBrowserPage() {
     const [isAudioReady, setIsAudioReady] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [lastCheckTime, setLastCheckTime] = useState<string>("");
+    const [isQuietHours, setIsQuietHours] = useState(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const lastEventIdRef = useRef<number>(0);
@@ -101,8 +102,39 @@ export default function BrowserBrowserPage() {
         };
     }, []);
 
+    // Check quiet hours status periodically
+    useEffect(() => {
+        const checkQuietHours = () => {
+            const hour = new Date().getHours();
+            setIsQuietHours(hour >= 20 || hour < 10);
+        };
+
+        // Check immediately
+        checkQuietHours();
+
+        // Check every minute
+        const intervalId = setInterval(checkQuietHours, 60000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
     // Play the MP3 file
     const playPipipi = useCallback(async () => {
+        // Check time - don't play between 20:00 (8 PM) and 10:00 (10 AM)
+        const now = new Date();
+        const hour = now.getHours();
+        const isQuietHours = hour >= 20 || hour < 10;
+
+        if (isQuietHours) {
+            // eslint-disable-next-line no-console
+            console.log(`Quiet hours (${hour}:00) - sound not played`);
+            setErrorMessage(`🌙 Quiet hours (${hour}:00) - Sound muted`);
+            setLastPlayed(`${new Date().toLocaleTimeString()} (muted)`);
+            // Clear the error message after a few seconds
+            setTimeout(() => setErrorMessage(""), 3000);
+            return;
+        }
+
         if (audioRef.current) {
             try {
                 // Reset to beginning if already playing
@@ -222,6 +254,11 @@ export default function BrowserBrowserPage() {
                             <p className={`${isConnected ? "text-green-600" : "text-red-600"}`}>
                                 Connection: {isConnected ? "✓ Connected" : "✗ Disconnected"}
                             </p>
+                            {isQuietHours && (
+                                <p className="text-yellow-600 dark:text-yellow-400">
+                                    🌙 Quiet Hours: Sound muted (20:00-10:00)
+                                </p>
+                            )}
                             <p className="text-gray-600 dark:text-gray-400">Event ID: {lastEventIdRef.current}</p>
                             <p className="text-gray-500 dark:text-gray-500 text-xs">Last check: {lastCheckTime || "Never"}</p>
                         </div>
