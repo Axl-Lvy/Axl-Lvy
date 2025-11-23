@@ -16,6 +16,7 @@ export default function BrowserBrowserPage() {
         // Create audio context on user interaction (required by browsers)
         const initAudio = () => {
             if (!audioContextRef.current) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
             }
         };
@@ -78,6 +79,7 @@ export default function BrowserBrowserPage() {
 
                 setIsConnected(true);
             } catch (error) {
+                // eslint-disable-next-line no-console
                 console.error("Error checking for music trigger:", error);
                 setIsConnected(false);
             }

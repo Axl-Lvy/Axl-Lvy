@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
             timestamp: state.lastTriggerTime,
         });
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error("Error checking music:", error);
         return NextResponse.json({ shouldPlay: false, eventId: 0, error: "Failed to check music" }, { status: 500 });
     }
