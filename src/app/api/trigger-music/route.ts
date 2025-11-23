@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { triggerMusic, getMusicState } from "../musicState";
 
+// Mark this route as dynamic
+export const dynamic = "force-dynamic";
+
 export async function POST() {
     try {
         const state = triggerMusic();

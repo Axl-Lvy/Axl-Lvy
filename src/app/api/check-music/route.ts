@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMusicState } from "../musicState";
 
+// Mark this route as dynamic
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
     try {
-        const { searchParams } = new URL(request.url);
-        const lastEventId = parseInt(searchParams.get("lastEventId") || "0");
+        const lastEventId = parseInt(request.nextUrl.searchParams.get("lastEventId") || "0");
 
         const state = getMusicState();
 
