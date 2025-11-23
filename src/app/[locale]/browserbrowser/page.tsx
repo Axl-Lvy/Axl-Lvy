@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import Container from '@/components/Container';
-import Section from '@/components/Section';
+import React, { useEffect, useRef, useState } from "react";
+import Container from "@/components/Container";
+import Section from "@/components/Section";
 
 export default function BrowserBrowserPage() {
     const [isConnected, setIsConnected] = useState(false);
     const [playCount, setPlayCount] = useState(0);
-    const [lastPlayed, setLastPlayed] = useState<string>('Never');
+    const [lastPlayed, setLastPlayed] = useState<string>("Never");
     const audioContextRef = useRef<AudioContext | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -20,10 +20,10 @@ export default function BrowserBrowserPage() {
             }
         };
 
-        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener("click", initAudio, { once: true });
 
         return () => {
-            document.removeEventListener('click', initAudio);
+            document.removeEventListener("click", initAudio);
         };
     }, []);
 
@@ -45,9 +45,9 @@ export default function BrowserBrowserPage() {
             gainNode.connect(ctx.destination);
 
             oscillator.frequency.value = freq;
-            oscillator.type = 'sine';
+            oscillator.type = "sine";
 
-            const startTime = ctx.currentTime + (index * duration);
+            const startTime = ctx.currentTime + index * duration;
             const endTime = startTime + duration;
 
             gainNode.gain.setValueAtTime(0.3, startTime);
@@ -77,7 +77,7 @@ export default function BrowserBrowserPage() {
 
                 setIsConnected(true);
             } catch (error) {
-                console.error('Error checking for music trigger:', error);
+                console.error("Error checking for music trigger:", error);
                 setIsConnected(false);
             }
         };
@@ -99,14 +99,14 @@ export default function BrowserBrowserPage() {
         <Container>
             <Section>
                 <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
-                    <h1 className="text-4xl md:text-6xl font-bold text-center">
-                        Browser Browser 🎧
-                    </h1>
+                    <h1 className="text-4xl md:text-6xl font-bold text-center">Browser Browser 🎧</h1>
 
                     <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`}></div>
+                        <div
+                            className={`w-3 h-3 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"} animate-pulse`}
+                        ></div>
                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {isConnected ? 'Connected' : 'Disconnected'}
+                            {isConnected ? "Connected" : "Disconnected"}
                         </span>
                     </div>
 
@@ -140,4 +140,3 @@ export default function BrowserBrowserPage() {
         </Container>
     );
 }
-

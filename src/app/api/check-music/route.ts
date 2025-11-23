@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getMusicState } from '../musicState';
+import { NextRequest, NextResponse } from "next/server";
+import { getMusicState } from "../musicState";
 
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
-        const lastEventId = parseInt(searchParams.get('lastEventId') || '0');
+        const lastEventId = parseInt(searchParams.get("lastEventId") || "0");
 
         const state = getMusicState();
 
@@ -17,11 +17,7 @@ export async function GET(request: NextRequest) {
             timestamp: state.lastTriggerTime,
         });
     } catch (error) {
-        console.error('Error checking music:', error);
-        return NextResponse.json(
-            { shouldPlay: false, eventId: 0, error: 'Failed to check music' },
-            { status: 500 }
-        );
+        console.error("Error checking music:", error);
+        return NextResponse.json({ shouldPlay: false, eventId: 0, error: "Failed to check music" }, { status: 500 });
     }
 }
-

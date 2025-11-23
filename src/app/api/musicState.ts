@@ -20,4 +20,3 @@ export function triggerMusic(): MusicState {
     musicState.lastTriggerTime = Date.now();
     return { ...musicState };
 }
-
