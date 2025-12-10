@@ -18,7 +18,7 @@ export async function DELETE(request: NextRequest) {
 
         // Initialize Supabase client with the user's token
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
         if (!supabaseUrl || !supabaseAnonKey) {
             // eslint-disable-next-line no-console
@@ -48,7 +48,7 @@ export async function DELETE(request: NextRequest) {
         }
 
         // Now use admin client to delete the user
-        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY;
 
         if (!supabaseServiceKey) {
             // eslint-disable-next-line no-console
