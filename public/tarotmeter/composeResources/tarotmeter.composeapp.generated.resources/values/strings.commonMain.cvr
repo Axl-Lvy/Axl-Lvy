@@ -159,7 +159,9 @@ string|tarot_poignee_simple_double|U2ltcGxlIGFuZCBkb3VibGU=
 string|tarot_poignee_simple|U2ltcGxl
 string|tarot_poignee_triple|VHJpcGxl
 string|tarot_poignee|UG9pZ27DqWU=
-string|tarot_points|Q2FyZCBwb2ludHMgKDAtOTEp
+string|tarot_points_defenders|RGVmZW5zZSBwb2ludHM=
+string|tarot_points_taker|QXR0YWNrIHBvaW50cw==
+string|tarot_points|UG9pbnRzICgwLTkxKQ==
 string|tarot_taker|VGFrZXI=
 string|title_confirm_email|Q29uZmlybSBFbWFpbA==
 string|title_game_editor|R2FtZSBFZGl0b3I=
