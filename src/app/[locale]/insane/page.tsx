@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, type CSSProperties } from "react";
-import { FaStar, FaRegStar, FaLock, FaPen, FaPlus, FaTrash, FaTimes, FaSave, FaSignOutAlt } from "react-icons/fa";
+import Link from "next/link";
+import { FaStar, FaRegStar, FaLock, FaPen, FaPlus, FaTrash, FaTimes, FaSave, FaSignOutAlt, FaArrowLeft } from "react-icons/fa";
 
 // ==================== TYPES ====================
 type StageKey = "MIRAGE" | "CLOUD" | "ALTF4" | "TECHNOBUS";
@@ -454,6 +455,11 @@ export default function InsaneFestivalPage() {
 
             <header className="insane-sticky-header" style={styles.header}>
                 <div style={styles.brand}>
+                    <div style={styles.homeCorner}>
+                        <Link href="/" style={styles.iconBtnLink} title="Back to home">
+                            <FaArrowLeft size={11} />
+                        </Link>
+                    </div>
                     <div style={styles.brandLine1}>INSANE FESTIVAL</div>
                     <div style={styles.brandLine2}>
                         <span style={{ opacity: 0.5 }}>Beyond</span>
@@ -943,6 +949,26 @@ const styles: Record<string, CSSProperties> = {
         right: 0,
         display: "flex",
         gap: 4,
+    },
+    homeCorner: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        display: "flex",
+        gap: 4,
+    },
+    iconBtnLink: {
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: 8,
+        width: 26,
+        height: 26,
+        color: "rgba(255,255,255,0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textDecoration: "none",
+        transition: "all 150ms",
     },
     iconBtn: {
         background: "rgba(255,255,255,0.04)",
