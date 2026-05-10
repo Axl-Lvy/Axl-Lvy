@@ -233,7 +233,7 @@ export default function InsaneFestivalPage() {
         else next.add(key);
         setFavs(next);
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(next)));
         } catch {
             /* storage may be unavailable */
         }
