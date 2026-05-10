@@ -16,15 +16,26 @@ export function middleware(request: NextRequest) {
     if (
         pathname.startsWith("/tarotmeter") ||
         pathname.startsWith("/memorchess") ||
+        pathname.startsWith("/insane") ||
         pathname.startsWith("/_next") ||
         pathname.startsWith("/api") ||
         pathname.includes("/images/") ||
         pathname.startsWith("/sounds/")
     ) {
-        // If accessing /tarotmeter/index.html, redirect to /tarotmeter
+        // Redirect /<app>/index.html to /<app>
         if (pathname === "/tarotmeter/index.html") {
             const url = request.nextUrl.clone();
             url.pathname = "/tarotmeter";
+            return NextResponse.redirect(url, 301);
+        }
+        if (pathname === "/memorchess/index.html") {
+            const url = request.nextUrl.clone();
+            url.pathname = "/memorchess";
+            return NextResponse.redirect(url, 301);
+        }
+        if (pathname === "/insane/index.html") {
+            const url = request.nextUrl.clone();
+            url.pathname = "/insane";
             return NextResponse.redirect(url, 301);
         }
         return NextResponse.next();
@@ -40,6 +51,7 @@ export const config = {
         "/(fr|en)/:path*",
         "/tarotmeter/:path*",
         "/memorchess/:path*",
-        "/((?!_next|api|tarotmeter|memorchess|images|sounds).*)",
+        "/insane/:path*",
+        "/((?!_next|api|tarotmeter|memorchess|insane|images|sounds).*)",
     ],
 };

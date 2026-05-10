@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Transition } from "@headlessui/react";
 import { HiOutlineXMark, HiBars3 } from "react-icons/hi2";
 import Image from "next/image";
@@ -12,22 +12,15 @@ import Container from "./Container";
 import { siteDetails } from "@/data/siteDetails";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-const INSANE_VISIBLE_UNTIL = new Date("2026-05-17T23:00:00");
-
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [showInsane, setShowInsane] = useState(false);
     const t = useTranslations("menu");
     const locale = useLocale();
     const pathname = usePathname();
     const homeBase = locale === "en" ? "" : `/${locale}`;
     const featuresHref = `${homeBase}/#features`;
     const contactHref = `${homeBase}/#contact`;
-    const insaneHref = `${homeBase}/insane`;
-
-    useEffect(() => {
-        setShowInsane(new Date() < INSANE_VISIBLE_UNTIL);
-    }, []);
+    const insaneHref = "/insane";
 
     if (pathname?.endsWith("/insane")) return null;
 
@@ -66,16 +59,14 @@ const Header: React.FC = () => {
                                     {t("contact")}
                                 </Link>
                             </li>
-                            {showInsane && (
-                                <li>
-                                    <Link
-                                        href={insaneHref}
-                                        className="text-foreground hover:text-foreground-accent transition-colors"
-                                    >
-                                        Insane
-                                    </Link>
-                                </li>
-                            )}
+                            <li>
+                                <Link
+                                    href={insaneHref}
+                                    className="text-foreground hover:text-foreground-accent transition-colors"
+                                >
+                                    Insane
+                                </Link>
+                            </li>
                         </ul>
                         <LanguageSwitcher />
                     </div>
@@ -122,13 +113,11 @@ const Header: React.FC = () => {
                                 {t("contact")}
                             </Link>
                         </li>
-                        {showInsane && (
-                            <li>
-                                <Link href={insaneHref} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
-                                    Insane
-                                </Link>
-                            </li>
-                        )}
+                        <li>
+                            <Link href={insaneHref} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                                Insane
+                            </Link>
+                        </li>
                         <li className="pt-2">
                             <LanguageSwitcher />
                         </li>
