@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { HiOutlineXMark, HiBars3 } from "react-icons/hi2";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import Container from "./Container";
 import { siteDetails } from "@/data/siteDetails";
@@ -17,6 +17,11 @@ const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [showInsane, setShowInsane] = useState(false);
     const t = useTranslations("menu");
+    const locale = useLocale();
+    const homeBase = locale === "en" ? "" : `/${locale}`;
+    const featuresHref = `${homeBase}/#features`;
+    const contactHref = `${homeBase}/#contact`;
+    const insaneHref = `${homeBase}/insane`;
 
     useEffect(() => {
         setShowInsane(new Date() < INSANE_VISIBLE_UNTIL);
@@ -43,7 +48,7 @@ const Header: React.FC = () => {
                         <ul className="flex space-x-6">
                             <li>
                                 <Link
-                                    href="#features"
+                                    href={featuresHref}
                                     className="text-foreground hover:text-foreground-accent transition-colors"
                                 >
                                     {t("about")}
@@ -51,7 +56,7 @@ const Header: React.FC = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="#contact"
+                                    href={contactHref}
                                     className="text-foreground hover:text-foreground-accent transition-colors"
                                 >
                                     {t("contact")}
@@ -60,7 +65,7 @@ const Header: React.FC = () => {
                             {showInsane && (
                                 <li>
                                     <Link
-                                        href="/insane"
+                                        href={insaneHref}
                                         className="text-foreground hover:text-foreground-accent transition-colors"
                                     >
                                         Insane
@@ -104,18 +109,18 @@ const Header: React.FC = () => {
                 <div id="mobile-menu" className="md:hidden bg-white shadow-lg">
                     <ul className="flex flex-col space-y-4 pt-1 pb-6 px-6">
                         <li>
-                            <Link href="#features" className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                            <Link href={featuresHref} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
                                 {t("about")}
                             </Link>
                         </li>
                         <li>
-                            <Link href="#contact" className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                            <Link href={contactHref} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
                                 {t("contact")}
                             </Link>
                         </li>
                         {showInsane && (
                             <li>
-                                <Link href="/insane" className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                                <Link href={insaneHref} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
                                     Insane
                                 </Link>
                             </li>

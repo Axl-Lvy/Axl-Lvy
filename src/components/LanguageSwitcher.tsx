@@ -1,22 +1,24 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { locales } from "@/i18n";
 
 export default function LanguageSwitcher() {
     const locale = useLocale();
-    const router = useRouter();
     const pathname = usePathname();
 
     const switchLocale = (newLocale: string) => {
-        // Remove the current locale from the pathname
-        const pathnameWithoutLocale = pathname.replace(`/${locale}`, "") || "/";
+        if (newLocale === locale) return;
 
-        // Navigate to the same page with the new locale
-        const newPath = newLocale === "en" ? pathnameWithoutLocale : `/${newLocale}${pathnameWithoutLocale}`;
+        // Strip current locale prefix if present (default locale "en" has no prefix with as-needed)
+        const stripped = pathname.replace(new RegExp(`^/${locale}(?=/|$)`), "") || "/";
 
-        router.push(newPath);
+        // Build new path: default locale "en" has no prefix, others get /<locale> prefix
+        const newPath = newLocale === "en" ? stripped : `/${newLocale}${stripped === "/" ? "" : stripped}`;
+
+        // Hard navigation so next-intl middleware re-resolves the locale and messages
+        window.location.assign(newPath + window.location.hash);
     };
 
     return (
