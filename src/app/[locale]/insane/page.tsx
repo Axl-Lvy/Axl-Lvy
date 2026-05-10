@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, type CSSProperties } from "react";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { useState, useEffect, useRef, useMemo, type CSSProperties } from "react";
+import { FaStar, FaRegStar, FaLock, FaPen, FaPlus, FaTrash, FaTimes, FaSave, FaSignOutAlt } from "react-icons/fa";
 
 // ==================== TYPES ====================
 type StageKey = "MIRAGE" | "CLOUD" | "ALTF4" | "TECHNOBUS";
 type DayKey = "jeu" | "ven" | "sam";
 type SetEntry = { s: string; e: string; a: string };
+type Lineup = Record<DayKey, Record<StageKey, SetEntry[]>>;
 
 // ==================== DATA ====================
 const STAGES: StageKey[] = ["MIRAGE", "CLOUD", "ALTF4", "TECHNOBUS"];
@@ -24,7 +25,7 @@ const DAYS: { id: DayKey; label: string; date: string; full: string }[] = [
     { id: "sam", label: "Sam", date: "16 mai", full: "Samedi 16 mai" },
 ];
 
-const LINEUP: Record<DayKey, Record<StageKey, SetEntry[]>> = {
+const INITIAL_LINEUP: Lineup = {
     jeu: {
         MIRAGE: [
             { s: "16:00", e: "17:30", a: "Kichta" },
@@ -201,12 +202,21 @@ function tToMin(t: string): number {
     return total - DAY_START_MIN;
 }
 
+function setsOverlap(a: SetEntry, b: SetEntry): boolean {
+    return tToMin(a.s) < tToMin(b.e) && tToMin(b.s) < tToMin(a.e);
+}
+
+function cloneLineup(l: Lineup): Lineup {
+    return JSON.parse(JSON.stringify(l));
+}
+
 const HOUR_LABELS = Array.from({ length: 17 }, (_, i) => {
     const h = (12 + i) % 24;
     return { h, label: `${String(h).padStart(2, "0")}:00`, top: i * 60 * PX_PER_MIN };
 });
 
 const STORAGE_KEY = "insane-festival-favorites";
+const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 // ==================== PAGE ====================
 export default function InsaneFestivalPage() {
@@ -217,7 +227,30 @@ export default function InsaneFestivalPage() {
     const [hiddenStages, setHiddenStages] = useState<Set<StageKey>>(new Set());
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Load favorites from localStorage
+    // Lineup data (fetched, falls back to initial)
+    const [lineup, setLineup] = useState<Lineup>(INITIAL_LINEUP);
+    const [lastSavedLineup, setLastSavedLineup] = useState<Lineup>(INITIAL_LINEUP);
+    const [lineupLoaded, setLineupLoaded] = useState(false);
+
+    // Admin / edit
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [loginPwd, setLoginPwd] = useState("");
+    const [loginError, setLoginError] = useState<string | null>(null);
+    const [loginBusy, setLoginBusy] = useState(false);
+
+    // Editing a specific set
+    const [editing, setEditing] = useState<{
+        day: DayKey;
+        stage: StageKey;
+        index: number; // -1 means new, append
+        draft: SetEntry;
+    } | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
+
+    // Load favorites
     useEffect(() => {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
@@ -225,6 +258,38 @@ export default function InsaneFestivalPage() {
         } catch {
             /* no favs yet */
         }
+    }, []);
+
+    // Fetch lineup + auth status on mount
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                const [lineupRes, meRes] = await Promise.all([
+                    fetch("/api/insane/lineup", { cache: "no-store" }),
+                    fetch("/api/insane/me", { cache: "no-store" }),
+                ]);
+                if (cancelled) return;
+                if (lineupRes.ok) {
+                    const data = (await lineupRes.json()) as { lineup: Lineup | null };
+                    if (data.lineup) {
+                        setLineup(data.lineup);
+                        setLastSavedLineup(data.lineup);
+                    }
+                }
+                if (meRes.ok) {
+                    const me = (await meRes.json()) as { admin: boolean };
+                    setIsAdmin(me.admin);
+                }
+            } catch {
+                /* keep fallback */
+            } finally {
+                if (!cancelled) setLineupLoaded(true);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const toggleFav = (key: string) => {
@@ -247,8 +312,141 @@ export default function InsaneFestivalPage() {
     };
 
     const visibleStages = STAGES.filter((s) => !hiddenStages.has(s));
-    const dayData = LINEUP[day];
+    const dayData = lineup[day];
     const favsCount = favs.size;
+    const dirty = useMemo(() => JSON.stringify(lineup) !== JSON.stringify(lastSavedLineup), [lineup, lastSavedLineup]);
+
+    // Overlap map for current day: stage → Set of indices that overlap with another in same stage
+    const overlapMap = useMemo(() => {
+        const out: Record<StageKey, Set<number>> = {
+            MIRAGE: new Set(),
+            CLOUD: new Set(),
+            ALTF4: new Set(),
+            TECHNOBUS: new Set(),
+        };
+        for (const stage of STAGES) {
+            const sets = lineup[day][stage];
+            for (let i = 0; i < sets.length; i++) {
+                for (let j = i + 1; j < sets.length; j++) {
+                    if (setsOverlap(sets[i], sets[j])) {
+                        out[stage].add(i);
+                        out[stage].add(j);
+                    }
+                }
+            }
+        }
+        return out;
+    }, [lineup, day]);
+
+    // ----- Login -----
+    const submitLogin = async () => {
+        setLoginBusy(true);
+        setLoginError(null);
+        try {
+            const res = await fetch("/api/insane/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: loginPwd }),
+            });
+            if (res.ok) {
+                setIsAdmin(true);
+                setLoginOpen(false);
+                setLoginPwd("");
+                setEditMode(true);
+            } else {
+                const data = (await res.json().catch(() => ({}))) as { error?: string };
+                setLoginError(data.error ?? "Login failed");
+            }
+        } catch {
+            setLoginError("Network error");
+        } finally {
+            setLoginBusy(false);
+        }
+    };
+
+    const logout = async () => {
+        await fetch("/api/insane/login", { method: "DELETE" }).catch(() => undefined);
+        setIsAdmin(false);
+        setEditMode(false);
+    };
+
+    // ----- Edit operations -----
+    const openEdit = (d: DayKey, stage: StageKey, index: number) => {
+        const set = lineup[d][stage][index];
+        setEditing({ day: d, stage, index, draft: { ...set } });
+    };
+    const openAdd = (d: DayKey, stage: StageKey) => {
+        setEditing({ day: d, stage, index: -1, draft: { s: "20:00", e: "21:00", a: "" } });
+    };
+    const closeEdit = () => setEditing(null);
+
+    const commitEdit = () => {
+        if (!editing) return;
+        const { draft, day: editDay, stage: editStage, index } = editing;
+        if (!TIME_RE.test(draft.s) || !TIME_RE.test(draft.e) || !draft.a.trim()) return;
+        const next = cloneLineup(lineup);
+        const arr = next[editDay][editStage];
+        if (index === -1) arr.push({ ...draft, a: draft.a.trim() });
+        else arr[index] = { ...draft, a: draft.a.trim() };
+        arr.sort((a, b) => tToMin(a.s) - tToMin(b.s));
+        setLineup(next);
+        setEditing(null);
+    };
+
+    const deleteEdit = () => {
+        if (!editing || editing.index === -1) {
+            setEditing(null);
+            return;
+        }
+        const next = cloneLineup(lineup);
+        next[editing.day][editing.stage].splice(editing.index, 1);
+        setLineup(next);
+        setEditing(null);
+    };
+
+    const moveEdit = (newDay: DayKey, newStage: StageKey) => {
+        if (!editing) return;
+        setEditing({ ...editing, day: newDay, stage: newStage, index: -1 });
+    };
+
+    // Compute overlaps in the editor's working state (for warning display)
+    const editingOverlaps = useMemo(() => {
+        if (!editing) return [] as { time: string; artist: string }[];
+        const { day: ed, stage: es, index, draft } = editing;
+        if (!TIME_RE.test(draft.s) || !TIME_RE.test(draft.e)) return [];
+        const peers = lineup[ed][es];
+        const result: { time: string; artist: string }[] = [];
+        peers.forEach((peer, i) => {
+            if (i === index) return;
+            if (setsOverlap(peer, draft)) result.push({ time: `${peer.s}–${peer.e}`, artist: peer.a });
+        });
+        return result;
+    }, [editing, lineup]);
+
+    // ----- Save -----
+    const save = async () => {
+        setSaving(true);
+        setSaveError(null);
+        try {
+            const res = await fetch("/api/insane/lineup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ lineup }),
+            });
+            if (!res.ok) {
+                const data = (await res.json().catch(() => ({}))) as { error?: string };
+                setSaveError(data.error ?? "Save failed");
+                return;
+            }
+            setLastSavedLineup(lineup);
+        } catch {
+            setSaveError("Network error");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const revert = () => setLineup(lastSavedLineup);
 
     return (
         <div style={styles.root}>
@@ -261,6 +459,27 @@ export default function InsaneFestivalPage() {
                         <span style={{ opacity: 0.5 }}>Beyond</span>
                         <span style={styles.brandGlyph}>✦</span>
                         <span style={{ opacity: 0.5 }}>Reality</span>
+                    </div>
+                    <div style={styles.adminCorner}>
+                        {!isAdmin && (
+                            <button style={styles.iconBtn} onClick={() => setLoginOpen(true)} title="Admin login">
+                                <FaLock size={11} />
+                            </button>
+                        )}
+                        {isAdmin && (
+                            <>
+                                <button
+                                    style={{ ...styles.iconBtn, ...(editMode ? styles.iconBtnActive : {}) }}
+                                    onClick={() => setEditMode(!editMode)}
+                                    title={editMode ? "Exit edit mode" : "Enter edit mode"}
+                                >
+                                    <FaPen size={11} />
+                                </button>
+                                <button style={styles.iconBtn} onClick={logout} title="Sign out">
+                                    <FaSignOutAlt size={11} />
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -319,6 +538,31 @@ export default function InsaneFestivalPage() {
                         {favsCount}
                     </button>
                 </div>
+
+                {editMode && (
+                    <div style={styles.editBar}>
+                        <span style={styles.editBarLabel}>EDIT MODE</span>
+                        {dirty ? (
+                            <span style={styles.editBarStatusDirty}>● Unsaved changes</span>
+                        ) : (
+                            <span style={styles.editBarStatusClean}>Saved</span>
+                        )}
+                        <div style={{ flex: 1 }} />
+                        {dirty && (
+                            <button style={styles.editBarBtn} onClick={revert} disabled={saving}>
+                                Revert
+                            </button>
+                        )}
+                        <button
+                            style={{ ...styles.editBarBtn, ...styles.editBarBtnPrimary }}
+                            onClick={save}
+                            disabled={!dirty || saving}
+                        >
+                            <FaSave size={10} /> {saving ? "Saving…" : "Save"}
+                        </button>
+                        {saveError && <span style={styles.editBarError}>{saveError}</span>}
+                    </div>
+                )}
             </header>
 
             <div style={styles.timelineWrap} ref={scrollRef}>
@@ -341,13 +585,23 @@ export default function InsaneFestivalPage() {
                             const sets = dayData[stage];
                             return (
                                 <div key={stage} style={styles.stageCol}>
-                                    {sets.map((set) => {
+                                    {editMode && (
+                                        <button
+                                            style={{ ...styles.addBtn, borderColor: meta.color, color: meta.color }}
+                                            onClick={() => openAdd(day, stage)}
+                                            title={`Add set on ${meta.label}`}
+                                        >
+                                            <FaPlus size={9} /> {meta.label}
+                                        </button>
+                                    )}
+                                    {sets.map((set, idx) => {
                                         const top = tToMin(set.s) * PX_PER_MIN;
                                         const height = (tToMin(set.e) - tToMin(set.s)) * PX_PER_MIN;
                                         const key = `${day}|${stage}|${set.s}|${set.a}`;
                                         const isFav = favs.has(key);
                                         const isSelected = selected === key;
-                                        const dimmed = favsOnly && !isFav;
+                                        const dimmed = favsOnly && !isFav && !editMode;
+                                        const isOverlap = overlapMap[stage].has(idx);
 
                                         const blockStyle: CSSProperties = {
                                             position: "absolute",
@@ -356,6 +610,8 @@ export default function InsaneFestivalPage() {
                                             right: 2,
                                             height: height - 4,
                                             borderLeft: `2px solid ${meta.color}`,
+                                            outline: isOverlap && editMode ? "1.5px solid #f59e0b" : undefined,
+                                            outlineOffset: -1,
                                             background: isFav
                                                 ? `linear-gradient(135deg, ${meta.color}38, ${meta.color}18)`
                                                 : `linear-gradient(135deg, ${meta.color}1f, ${meta.color}0a)`,
@@ -378,8 +634,11 @@ export default function InsaneFestivalPage() {
 
                                         return (
                                             <div
-                                                key={key}
-                                                onClick={() => setSelected(isSelected ? null : key)}
+                                                key={`${stage}-${idx}-${set.s}-${set.a}`}
+                                                onClick={() => {
+                                                    if (editMode) openEdit(day, stage, idx);
+                                                    else setSelected(isSelected ? null : key);
+                                                }}
                                                 className="set-block"
                                                 style={blockStyle}
                                             >
@@ -393,9 +652,14 @@ export default function InsaneFestivalPage() {
                                                 >
                                                     {set.a}
                                                 </div>
-                                                {isFav && (
+                                                {isFav && !editMode && (
                                                     <div style={styles.favBadge}>
                                                         <FaStar size={9} color="#fbbf24" />
+                                                    </div>
+                                                )}
+                                                {isOverlap && editMode && (
+                                                    <div style={styles.overlapBadge} title="Overlaps with another set">
+                                                        ⚠
                                                     </div>
                                                 )}
                                             </div>
@@ -408,7 +672,12 @@ export default function InsaneFestivalPage() {
                 </div>
             </div>
 
+            {!lineupLoaded && (
+                <div style={styles.loadingBadge}>Loading…</div>
+            )}
+
             {selected &&
+                !editMode &&
                 (() => {
                     const parts = selected.split("|");
                     const stage = parts[1] as StageKey;
@@ -454,6 +723,169 @@ export default function InsaneFestivalPage() {
                         </div>
                     );
                 })()}
+
+            {/* Login modal */}
+            {loginOpen && (
+                <div style={styles.detailPanel} onClick={() => setLoginOpen(false)}>
+                    <div style={styles.detailCard} onClick={(e) => e.stopPropagation()}>
+                        <div style={{ ...styles.detailStage, color: "#a78bfa" }}>
+                            <FaLock size={11} /> ADMIN
+                        </div>
+                        <input
+                            type="password"
+                            value={loginPwd}
+                            onChange={(e) => setLoginPwd(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && submitLogin()}
+                            placeholder="Password"
+                            autoFocus
+                            style={styles.input}
+                        />
+                        {loginError && <div style={styles.errorText}>{loginError}</div>}
+                        <button
+                            style={{ ...styles.detailFavBtn, borderColor: "#a78bfa", color: "#a78bfa" }}
+                            onClick={submitLogin}
+                            disabled={loginBusy || !loginPwd}
+                        >
+                            {loginBusy ? "Signing in…" : "Sign in"}
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit modal */}
+            {editing && (
+                <div style={styles.detailPanel} onClick={closeEdit}>
+                    <div
+                        style={{ ...styles.detailCard, borderColor: STAGE_META[editing.stage].color }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div style={{ ...styles.detailStage, color: STAGE_META[editing.stage].color }}>
+                            <span
+                                style={{
+                                    ...styles.stageDot,
+                                    background: STAGE_META[editing.stage].color,
+                                    borderColor: STAGE_META[editing.stage].color,
+                                }}
+                            />
+                            {editing.index === -1 ? "NEW SET" : "EDIT SET"}
+                        </div>
+
+                        <label style={styles.fieldLabel}>Artist</label>
+                        <input
+                            type="text"
+                            value={editing.draft.a}
+                            onChange={(e) =>
+                                setEditing({ ...editing, draft: { ...editing.draft, a: e.target.value } })
+                            }
+                            placeholder="Artist name"
+                            autoFocus
+                            style={styles.input}
+                        />
+
+                        <div style={styles.row2}>
+                            <div style={{ flex: 1 }}>
+                                <label style={styles.fieldLabel}>Start</label>
+                                <input
+                                    type="time"
+                                    value={editing.draft.s}
+                                    onChange={(e) =>
+                                        setEditing({ ...editing, draft: { ...editing.draft, s: e.target.value } })
+                                    }
+                                    style={styles.input}
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <label style={styles.fieldLabel}>End</label>
+                                <input
+                                    type="time"
+                                    value={editing.draft.e}
+                                    onChange={(e) =>
+                                        setEditing({ ...editing, draft: { ...editing.draft, e: e.target.value } })
+                                    }
+                                    style={styles.input}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={styles.row2}>
+                            <div style={{ flex: 1 }}>
+                                <label style={styles.fieldLabel}>Day</label>
+                                <select
+                                    value={editing.day}
+                                    onChange={(e) => moveEdit(e.target.value as DayKey, editing.stage)}
+                                    style={styles.input}
+                                >
+                                    {DAYS.map((d) => (
+                                        <option key={d.id} value={d.id}>
+                                            {d.full}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <label style={styles.fieldLabel}>Stage</label>
+                                <select
+                                    value={editing.stage}
+                                    onChange={(e) => moveEdit(editing.day, e.target.value as StageKey)}
+                                    style={styles.input}
+                                >
+                                    {STAGES.map((s) => (
+                                        <option key={s} value={s}>
+                                            {STAGE_META[s].label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        {editingOverlaps.length > 0 && (
+                            <div style={styles.overlapWarn}>
+                                <strong>Overlap{editingOverlaps.length > 1 ? "s" : ""}:</strong>
+                                {editingOverlaps.map((o, i) => (
+                                    <div key={i} style={{ fontSize: 11, opacity: 0.85 }}>
+                                        {o.time} — {o.artist}
+                                    </div>
+                                ))}
+                                <div style={{ fontSize: 10, opacity: 0.7, marginTop: 4 }}>
+                                    Saving will keep both sets.
+                                </div>
+                            </div>
+                        )}
+
+                        <div style={styles.editBtnRow}>
+                            <button
+                                onClick={closeEdit}
+                                style={{ ...styles.editActionBtn, borderColor: "rgba(255,255,255,0.2)" }}
+                            >
+                                <FaTimes size={11} /> Cancel
+                            </button>
+                            {editing.index !== -1 && (
+                                <button
+                                    onClick={deleteEdit}
+                                    style={{ ...styles.editActionBtn, borderColor: "#ef4444", color: "#ef4444" }}
+                                >
+                                    <FaTrash size={11} /> Delete
+                                </button>
+                            )}
+                            <button
+                                onClick={commitEdit}
+                                disabled={
+                                    !TIME_RE.test(editing.draft.s) ||
+                                    !TIME_RE.test(editing.draft.e) ||
+                                    !editing.draft.a.trim()
+                                }
+                                style={{
+                                    ...styles.editActionBtn,
+                                    borderColor: STAGE_META[editing.stage].color,
+                                    color: STAGE_META[editing.stage].color,
+                                }}
+                            >
+                                {editing.index === -1 ? "Add" : "Apply"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -483,7 +915,7 @@ const styles: Record<string, CSSProperties> = {
         borderBottom: "1px solid rgba(255,255,255,0.06)",
         padding: "14px 12px 10px",
     },
-    brand: { textAlign: "center", marginBottom: 12 },
+    brand: { textAlign: "center", marginBottom: 12, position: "relative" },
     brandLine1: {
         fontFamily: "Bebas Neue, sans-serif",
         fontSize: 22,
@@ -505,6 +937,31 @@ const styles: Record<string, CSSProperties> = {
         gap: 8,
     },
     brandGlyph: { color: "#a78bfa", fontSize: 12 },
+    adminCorner: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        display: "flex",
+        gap: 4,
+    },
+    iconBtn: {
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: 8,
+        width: 26,
+        height: 26,
+        color: "rgba(255,255,255,0.5)",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "all 150ms",
+    },
+    iconBtnActive: {
+        background: "rgba(167,139,250,0.18)",
+        borderColor: "rgba(167,139,250,0.5)",
+        color: "#a78bfa",
+    },
     dayTabs: { display: "flex", gap: 6, marginBottom: 10 },
     dayTab: {
         flex: 1,
@@ -567,6 +1024,44 @@ const styles: Record<string, CSSProperties> = {
         borderColor: "#fbbf24",
         boxShadow: "0 0 12px rgba(251,191,36,0.25)",
     },
+    editBar: {
+        marginTop: 10,
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        background: "rgba(167,139,250,0.08)",
+        border: "1px solid rgba(167,139,250,0.3)",
+        borderRadius: 10,
+        padding: "6px 10px",
+        fontSize: 11,
+        flexWrap: "wrap",
+    },
+    editBarLabel: {
+        fontFamily: "JetBrains Mono, monospace",
+        letterSpacing: "0.18em",
+        color: "#a78bfa",
+        fontWeight: 700,
+    },
+    editBarStatusDirty: { color: "#fbbf24", fontFamily: "JetBrains Mono, monospace" },
+    editBarStatusClean: { color: "rgba(255,255,255,0.5)", fontFamily: "JetBrains Mono, monospace" },
+    editBarBtn: {
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.15)",
+        borderRadius: 6,
+        padding: "5px 10px",
+        color: "#fff",
+        fontSize: 11,
+        cursor: "pointer",
+        fontFamily: "inherit",
+        display: "flex",
+        alignItems: "center",
+        gap: 5,
+    },
+    editBarBtnPrimary: {
+        background: "rgba(167,139,250,0.2)",
+        borderColor: "rgba(167,139,250,0.6)",
+    },
+    editBarError: { color: "#ef4444", fontSize: 10, width: "100%" },
     timelineWrap: { flex: 1, overflow: "auto", padding: "12px 8px 40px" },
     timeline: { position: "relative", display: "flex", minHeight: "100%" },
     timeCol: { width: 38, flexShrink: 0, position: "relative" },
@@ -588,6 +1083,27 @@ const styles: Record<string, CSSProperties> = {
     },
     stagesContainer: { flex: 1, display: "flex", gap: 2, position: "relative" },
     stageCol: { flex: 1, minWidth: 0, position: "relative", background: "rgba(255,255,255,0.015)", borderRadius: 4 },
+    addBtn: {
+        position: "absolute",
+        top: -28,
+        left: 0,
+        right: 0,
+        background: "rgba(0,0,0,0.4)",
+        border: "1px dashed",
+        borderRadius: 6,
+        padding: "3px 4px",
+        fontSize: 9,
+        fontWeight: 700,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 4,
+        fontFamily: "inherit",
+        zIndex: 5,
+    },
     setTime: {
         fontSize: 8.5,
         fontFamily: "JetBrains Mono, monospace",
@@ -596,6 +1112,27 @@ const styles: Record<string, CSSProperties> = {
     },
     setArtist: { fontWeight: 600, color: "#fff", wordBreak: "break-word", overflow: "hidden" },
     favBadge: { position: "absolute", top: 3, right: 3 },
+    overlapBadge: {
+        position: "absolute",
+        top: 3,
+        right: 3,
+        color: "#f59e0b",
+        fontSize: 11,
+        fontWeight: 700,
+        textShadow: "0 0 4px rgba(245,158,11,0.6)",
+    },
+    loadingBadge: {
+        position: "fixed",
+        bottom: 16,
+        right: 16,
+        background: "rgba(167,139,250,0.18)",
+        border: "1px solid rgba(167,139,250,0.4)",
+        borderRadius: 999,
+        padding: "5px 12px",
+        fontSize: 10,
+        color: "#a78bfa",
+        fontFamily: "JetBrains Mono, monospace",
+    },
     detailPanel: {
         position: "fixed",
         inset: 0,
@@ -610,7 +1147,7 @@ const styles: Record<string, CSSProperties> = {
     },
     detailCard: {
         background: "linear-gradient(160deg, #181030, #0a0814)",
-        border: "1px solid",
+        border: "1px solid rgba(255,255,255,0.1)",
         borderRadius: 16,
         padding: 22,
         width: "100%",
@@ -664,5 +1201,61 @@ const styles: Record<string, CSSProperties> = {
         gap: 8,
         fontFamily: "inherit",
         transition: "all 150ms",
+        background: "transparent",
+    },
+    fieldLabel: {
+        fontSize: 9,
+        textTransform: "uppercase",
+        letterSpacing: "0.18em",
+        color: "rgba(255,255,255,0.5)",
+        fontFamily: "JetBrains Mono, monospace",
+        marginBottom: -4,
+    },
+    input: {
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.12)",
+        borderRadius: 8,
+        padding: "9px 11px",
+        color: "#fff",
+        fontSize: 14,
+        fontFamily: "inherit",
+        width: "100%",
+        boxSizing: "border-box",
+    },
+    row2: { display: "flex", gap: 8 },
+    overlapWarn: {
+        background: "rgba(245,158,11,0.1)",
+        border: "1px solid rgba(245,158,11,0.4)",
+        borderRadius: 8,
+        padding: "8px 10px",
+        fontSize: 12,
+        color: "#fbbf24",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+    },
+    editBtnRow: { display: "flex", gap: 6, marginTop: 6 },
+    editActionBtn: {
+        flex: 1,
+        background: "transparent",
+        border: "1px solid",
+        borderRadius: 8,
+        padding: "8px 10px",
+        color: "#fff",
+        fontWeight: 600,
+        fontSize: 11,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        cursor: "pointer",
+        fontFamily: "inherit",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 6,
+    },
+    errorText: {
+        color: "#ef4444",
+        fontSize: 12,
+        fontFamily: "JetBrains Mono, monospace",
     },
 };

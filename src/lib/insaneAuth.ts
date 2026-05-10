@@ -14,15 +14,19 @@ function sign(value: string, secret: string): string {
     return crypto.createHmac("sha256", secret).update(value).digest("hex");
 }
 
+function secureFlag(): string {
+    return process.env.NODE_ENV === "production" ? "; Secure" : "";
+}
+
 export function buildAdminCookie(): string {
     const secret = getSecret();
     const sig = sign(COOKIE_VALUE, secret);
     const value = `${COOKIE_VALUE}.${sig}`;
-    return `${INSANE_COOKIE_NAME}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${MAX_AGE_SECONDS}; Secure`;
+    return `${INSANE_COOKIE_NAME}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${MAX_AGE_SECONDS}${secureFlag()}`;
 }
 
 export function clearAdminCookie(): string {
-    return `${INSANE_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0; Secure`;
+    return `${INSANE_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secureFlag()}`;
 }
 
 export function isAdminCookieValid(cookieHeader: string | null): boolean {
