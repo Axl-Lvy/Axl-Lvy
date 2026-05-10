@@ -17,6 +17,9 @@ export default function LanguageSwitcher() {
         // Build new path: default locale "en" has no prefix, others get /<locale> prefix
         const newPath = newLocale === "en" ? stripped : `/${newLocale}${stripped === "/" ? "" : stripped}`;
 
+        // Persist choice so next-intl middleware doesn't bounce us back via locale detection
+        document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+
         // Hard navigation so next-intl middleware re-resolves the locale and messages
         window.location.assign(newPath + window.location.hash);
     };
