@@ -16,6 +16,9 @@ string|day_ven_date|TWF5IDE1
 string|day_ven_full|RnJpZGF5IE1heSAxNQ==
 string|day_ven_short|RnJp
 string|detail_add_to_favorites|QUREIFRPIEZBVk9SSVRFUw==
+string|detail_fav_count_none|Tm9ib2R5IGZhdm9yaXRlZCB0aGlzIHlldA==
+string|detail_fav_count_one|MSBwZXJzb24gZmF2b3JpdGVkIHRoaXM=
+string|detail_fav_count_other|JTEkZCBwZW9wbGUgZmF2b3JpdGVkIHRoaXM=
 string|detail_favorite_active|RkFWT1JJVEU=
 string|display_name_description|WW91ciBmcmllbmRzIHNlZSB0aGlzIGFib3ZlIHlvdXIgZmF2b3JpdGVzLiBZb3UgY2FuIGNoYW5nZSBpdCBsYXRlci4=
 string|display_name_placeholder|ZS5nLiBDYW1pbGxl
