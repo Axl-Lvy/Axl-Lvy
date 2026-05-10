@@ -449,7 +449,7 @@ export default function InsaneFestivalPage() {
     const revert = () => setLineup(lastSavedLineup);
 
     return (
-        <div style={styles.root}>
+        <div className="insane-root" style={styles.root}>
             <style>{globalCss}</style>
 
             <header className="insane-sticky-header" style={styles.header}>
@@ -895,6 +895,7 @@ const globalCss = `
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap');
   .set-block:active { transform: scale(0.98); }
   @media (max-width: 767px) {
+    .insane-root { padding-top: 56px; min-height: 100vh; }
     .insane-sticky-header { top: 56px !important; }
   }
 `;
