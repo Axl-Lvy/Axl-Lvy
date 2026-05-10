@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { HiOutlineXMark, HiBars3 } from "react-icons/hi2";
@@ -18,6 +19,7 @@ const Header: React.FC = () => {
     const [showInsane, setShowInsane] = useState(false);
     const t = useTranslations("menu");
     const locale = useLocale();
+    const pathname = usePathname();
     const homeBase = locale === "en" ? "" : `/${locale}`;
     const featuresHref = `${homeBase}/#features`;
     const contactHref = `${homeBase}/#contact`;
@@ -26,6 +28,8 @@ const Header: React.FC = () => {
     useEffect(() => {
         setShowInsane(new Date() < INSANE_VISIBLE_UNTIL);
     }, []);
+
+    if (pathname?.endsWith("/insane")) return null;
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);

@@ -894,10 +894,6 @@ export default function InsaneFestivalPage() {
 const globalCss = `
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap');
   .set-block:active { transform: scale(0.98); }
-  @media (max-width: 767px) {
-    .insane-root { padding-top: 56px; min-height: 100vh; }
-    .insane-sticky-header { top: 56px !important; }
-  }
 `;
 
 const styles: Record<string, CSSProperties> = {
