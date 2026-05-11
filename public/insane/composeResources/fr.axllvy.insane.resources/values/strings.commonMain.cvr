@@ -6,6 +6,7 @@ string|cd_qr_code|UVIgY29kZSBmb3IgJTEkcw==
 string|cd_refresh|UmVmcmVzaA==
 string|cd_remove_friend|UmVtb3ZlIGZyaWVuZA==
 string|cd_scan_qr|U2NhbiBRUg==
+string|cd_search|U2VhcmNo
 string|day_jeu_date|TWF5IDE0
 string|day_jeu_full|VGh1cnNkYXkgTWF5IDE0
 string|day_jeu_short|VGh1
@@ -46,6 +47,10 @@ string|notification_channel_name|RmF2b3JpdGUgc2V0cw==
 string|scanner_title|U0NBTiBBIEZSSUVORCBDT0RF
 string|scanner_web_message|UVIgc2Nhbm5pbmcgaXNuJ3QgYXZhaWxhYmxlIGluIHRoZSB3ZWIgYnVpbGQgeWV0LiBPcGVuIHRoZSBhcHAgb24geW91ciBwaG9uZSwgb3IgdHlwZSB0aGUgNi1jaGFyYWN0ZXIgY29kZSB5b3VyIGZyaWVuZCBzaGFyZWQu
 string|scanner_web_title|U0NBTiBPTiBNT0JJTEU=
+string|search_empty_no_match|Tm8gYXJ0aXN0IG1hdGNoZXMu
+string|search_empty_prompt|VHlwZSBhbiBhcnRpc3QgbmFtZSB0byBmaW5kIHdoZW4gYW5kIHdoZXJlIHRoZXkgcGxheS4=
+string|search_placeholder|QXJ0aXN0IG5hbWU=
+string|search_title|U0VBUkNI
 string|snackbar_friend_added_default|ZnJpZW5k
 string|snackbar_friend_added|QWRkZWQgJTEkcw==
 string|snackbar_lineup_refreshed|TGluZXVwIHJlZnJlc2hlZA==
