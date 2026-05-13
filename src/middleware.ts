@@ -17,6 +17,7 @@ export function middleware(request: NextRequest) {
         pathname.startsWith("/tarotmeter") ||
         pathname.startsWith("/memorchess") ||
         pathname.startsWith("/insane") ||
+        pathname.startsWith("/rain") ||
         pathname.startsWith("/_next") ||
         pathname.startsWith("/api") ||
         pathname.includes("/images/") ||
@@ -38,6 +39,11 @@ export function middleware(request: NextRequest) {
             url.pathname = "/insane";
             return NextResponse.redirect(url, 301);
         }
+        if (pathname === "/rain/index.html") {
+            const url = request.nextUrl.clone();
+            url.pathname = "/rain";
+            return NextResponse.redirect(url, 301);
+        }
         return NextResponse.next();
     }
 
@@ -52,6 +58,7 @@ export const config = {
         "/tarotmeter/:path*",
         "/memorchess/:path*",
         "/insane/:path*",
-        "/((?!_next|api|tarotmeter|memorchess|insane|images|sounds).*)",
+        "/rain/:path*",
+        "/((?!_next|api|tarotmeter|memorchess|insane|rain|images|sounds).*)",
     ],
 };

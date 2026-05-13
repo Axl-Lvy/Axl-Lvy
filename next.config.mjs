@@ -73,6 +73,14 @@ const nextConfig = {
                 source: "/insane/",
                 destination: "/insane/index.html",
             },
+            {
+                source: "/rain",
+                destination: "/rain/index.html",
+            },
+            {
+                source: "/rain/",
+                destination: "/rain/index.html",
+            },
         ];
     },
     trailingSlash: false,
