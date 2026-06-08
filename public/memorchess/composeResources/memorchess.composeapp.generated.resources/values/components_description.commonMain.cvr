@@ -9,4 +9,8 @@ string|description_board_reset|UmVzZXQgYm9hcmQ=
 string|description_board_reverse|UmV2ZXJzZSBib2FyZA==
 string|description_board_save|U2F2ZQ==
 string|description_board_tile|VGlsZSAlMSRz
+string|description_forward|Rm9yd2FyZA==
+string|description_reset|UmVzZXQ=
+string|description_reverse|UmV2ZXJzZQ==
+string|description_toggle_eval_bar|VG9nZ2xlIGV2YWx1YXRpb24gYmFy
 string|settings_preferences_file|cHJlZmVyZW5jZXM=
