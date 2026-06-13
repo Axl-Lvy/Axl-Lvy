@@ -102,6 +102,8 @@ string|settings_import_invalid|SW52YWxpZCBmaWxlIGZvcm1hdDogJTEkcw==
 string|settings_import|SU1QT1JUIEZJTEU=
 string|settings_lichess_study_field|TGljaGVzcyBzdHVkeSBVUkwgb3IgSUQ=
 string|settings_lichess_study_import|SU1QT1JUIFNUVURZ
+string|settings_max_new_moves_per_day|TmV3IG1vdmVzIHBlciBkYXk=
+string|settings_max_total_moves_per_day|VG90YWwgbW92ZXMgcGVyIGRheQ==
 string|settings_move_animation_max|MjAwMG1z
 string|settings_move_animation|TW92ZSBhbmltYXRpb24=
 string|settings_nav_board|Qm9hcmQ=
