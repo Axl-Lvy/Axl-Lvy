@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { Transition } from "@headlessui/react";
 import { HiOutlineXMark, HiBars3 } from "react-icons/hi2";
@@ -16,13 +15,9 @@ const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const t = useTranslations("menu");
     const locale = useLocale();
-    const pathname = usePathname();
     const homeBase = locale === "en" ? "" : `/${locale}`;
     const featuresHref = `${homeBase}/#features`;
     const contactHref = `${homeBase}/#contact`;
-    const insaneHref = "/insane";
-
-    if (pathname?.endsWith("/insane")) return null;
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -57,14 +52,6 @@ const Header: React.FC = () => {
                                     className="text-foreground hover:text-foreground-accent transition-colors"
                                 >
                                     {t("contact")}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={insaneHref}
-                                    className="text-foreground hover:text-foreground-accent transition-colors"
-                                >
-                                    Insane
                                 </Link>
                             </li>
                         </ul>
@@ -111,11 +98,6 @@ const Header: React.FC = () => {
                         <li>
                             <Link href={contactHref} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
                                 {t("contact")}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href={insaneHref} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
-                                Insane
                             </Link>
                         </li>
                         <li className="pt-2">

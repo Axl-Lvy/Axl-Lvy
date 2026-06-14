@@ -26,15 +26,15 @@ Next.js 14 App Router, TypeScript, Tailwind. Personal site that bundles a market
 Two distinct patterns, pick deliberately:
 
 1. **Ephemeral in-memory** — `src/app/api/musicState.ts`. Module-scoped state. Resets on cold start, *not shared across serverless instances*. Used by `listen`/`boomboom` because the feature only needs to coordinate a brief window between two browsers on the same Vercel instance. Don't use this for anything that needs durability or cross-instance consistency.
-2. **Supabase** — used for anything durable (e.g. `delete-user`, and the vendored `/insane` wasm app talks to Supabase directly from the client). Server uses the service role key (`SUPABASE_SECRET_KEY`); tables have RLS enabled with **no policies**, so the public `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (which ships in the browser bundle) gets nothing. The service role key bypasses RLS, which is how the API still works. When adding a new Supabase-backed table, follow this pattern: `enable row level security` and don't add policies unless you actually want public access. (The `/insane` wasm app is the exception — it uses the anon key with explicit policies on its own tables; see the inase-lineup repo.)
+2. **Supabase** — used for anything durable (e.g. `delete-user`). Server uses the service role key (`SUPABASE_SECRET_KEY`); tables have RLS enabled with **no policies**, so the public `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (which ships in the browser bundle) gets nothing. The service role key bypasses RLS, which is how the API still works. When adding a new Supabase-backed table, follow this pattern: `enable row level security` and don't add policies unless you actually want public access.
 
 ### Vendored static apps
 
-`public/tarotmeter/`, `public/memorchess/`, and `public/insane/` are pre-built standalone Kotlin/Wasm apps. `next.config.mjs` rewrites `/<app>` → `/<app>/index.html` and serves them with `Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp` (required for SharedArrayBuffer / WebAssembly threads). `src/middleware.ts` carves these paths out of the next-intl middleware.
+`public/tarotmeter/` and `public/memorchess/` are pre-built standalone Kotlin/Wasm apps. `next.config.mjs` rewrites `/<app>` → `/<app>/index.html` and serves them with `Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp` (required for SharedArrayBuffer / WebAssembly threads). `src/middleware.ts` carves these paths out of the next-intl middleware.
 
 Don't edit files under those folders directly — they're build outputs from other repos, kept in sync via GitHub Actions:
 
-- Producer repos (e.g. `Axl-Lvy/TarotMeter`, `Axl-Lvy/MemorChess`, `Axl-Lvy/insane-lineup`) build `composeApp/build/dist/wasmJs/productionExecutable/` and `curl` a `repository_dispatch` to this repo with the artifact URL in `client_payload.message`.
+- Producer repos (e.g. `Axl-Lvy/TarotMeter`, `Axl-Lvy/MemorChess`) build `composeApp/build/dist/wasmJs/productionExecutable/` and `curl` a `repository_dispatch` to this repo with the artifact URL in `client_payload.message`.
 - Consumer workflows here (`.github/workflows/update_<app>.yml`) listen for those events, `gh run download` the artifact into `public/<app>/`, run `python3 scripts/fix_<app>_paths.py` to inject `<base href="/<app>/">` and rewrite relative paths, then commit.
 
 To add another vendored app: copy one of the `update_*.yml` + `fix_*_paths.py` pairs, add headers + rewrites in `next.config.mjs`, and carve the path out of `src/middleware.ts`. The producer side needs a `REPOSITORY_ACCESS_TOKEN` PAT secret with `contents: write` on this repo.
