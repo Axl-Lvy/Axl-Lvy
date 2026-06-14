@@ -59,6 +59,7 @@ string|library_retry|UkVUUlk=
 string|library_stale_hint|U2hvd2luZyBhIHByZXZpb3VzbHkgZG93bmxvYWRlZCBjYXRhbG9nLiBJdCBtYXkgYmUgb3V0IG9mIGRhdGUu
 string|library_subtitle|UmVhZHkgbWFkZSByZXBlcnRvaXJlcyB5b3UgY2FuIGFkZCB0byB5b3VyIHRyYWluaW5nLg==
 string|library_title|UkVQRVJUT0lSRSBMSUJSQVJZ
+string|library_view|QnJvd3NlIHRoaXMgcmVwZXJ0b2lyZQ==
 string|lichess_connected|Q29ubmVjdGVkIHRvIGxpY2hlc3Mub3Jn
 string|lichess_disconnect|RElTQ09OTkVDVA==
 string|lichess_not_signed_in|Tm90IHNpZ25lZCBpbg==
@@ -83,6 +84,7 @@ string|piece_knight|a25pZ2h0
 string|piece_queen|cXVlZW4=
 string|piece_rook|cm9vaw==
 string|promotion_promote_to|UHJvbW90ZSB0byAlMSRz
+string|repertoire_view_not_found|UmVwZXJ0b2lyZSBcIiUxJHNcIiBpcyBub3QgaW4gdGhlIGNhdGFsb2cgYW55bW9yZS4=
 string|settings_auto_advance_delay|QXV0by1hZHZhbmNlIGRlbGF5
 string|settings_auto_advance_max|NXM=
 string|settings_auto_advance_min|MHM=
@@ -151,6 +153,7 @@ string|tag_start|U1RBUlQ=
 string|toast_deleted|RGVsZXRlZA==
 string|toast_no_next_move|Tm8gbmV4dCBtb3ZlLg==
 string|toast_no_previous_move|Tm8gcHJldmlvdXMgbW92ZS4=
+string|toast_not_in_repertoire|VGhhdCBtb3ZlIGlzIG5vdCBpbiB0aGlzIHJlcGVydG9pcmUu
 string|toast_saved|U2F2ZWQ=
 string|training_black_to_move|QkxBQ0sgVE8gTU9WRQ==
 string|training_congratulations|Q29uZ3JhdHVsYXRpb25z
