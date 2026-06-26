@@ -15,6 +15,7 @@ string|dialog_close|Q2xvc2U=
 string|dialog_delete|RGVsZXRl
 string|dialog_ok|T0s=
 string|explore_black|QkxBQ0s=
+string|explore_delete_confirm_many|QXJlIHlvdSBzdXJlIHlvdSB3YW50IHRvIGRlbGV0ZSAlMSRkIG9yIG1vcmUgcG9zaXRpb25zPw==
 string|explore_eco|RUNPICUxJHM=
 string|explore_error|Q291bGQgbm90IGxvYWQgZXhwbG9yZXI6ICUxJHM=
 string|explore_idle|TWFrZSBhIG1vdmUgdG8gbG9hZCBwb3B1bGFyIHJlcGxpZXMu
